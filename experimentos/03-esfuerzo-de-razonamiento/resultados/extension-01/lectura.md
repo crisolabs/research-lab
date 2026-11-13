@@ -1,0 +1,24 @@
+
+### Lectura de los cinco niveles
+
+Los cinco niveles resolvieron **24/24 corridas por nivel**: 120 principales en total, sin cambios fuera de alcance. Los ocho controles nuevos de high también pasaron; el piloto de dos corridas quedó excluido y pasó completo. Xhigh y max no agregaron aciertos observables frente a los niveles originales. El banco conserva el efecto techo: este empate no demuestra que el esfuerzo de razonamiento sea inútil en otras tareas.
+
+Las medianas agregadas de tiempo y tokens aumentaron al recorrer los cinco niveles. En cambios acotados, xhigh y max tuvieron medianas de 75,8 y 91,4 segundos; en diseño, 131,6 y 161,4. Los tokens medianos de xhigh y max quedaron casi empatados en acotadas (130.263 y 130.388), mientras que en diseño fueron 140.699 y 149.146. El patrón agregado no se cumple en cada tarea: max usó menos tokens medianos que xhigh en lotes, espera y planificador, y fue más rápido en importes y espera. Las medianas de líneas tampoco avanzaron de manera uniforme; ninguna de esas diferencias mide limpieza de código.
+
+El control high mostró movimientos en ambas direcciones. Su mediana en acotadas pasó de 55,2 a 43,0 segundos (15 frente a cinco observaciones), y en diseño de 79,2 a 87,2 (nueve frente a tres). Los cocientes por tarea de la segunda tanda respecto de la primera van aproximadamente de 0,78 a 1,33. Una única corrida nueva por tarea mezcla variación de respuestas, herramientas, esperas y carga; no demuestra qué proporción del cambio proviene del servidor. Por eso no usamos ese control para normalizar ni corregir los tiempos.
+
+Max tuvo una mediana de tiempo 2,28 veces la de medium en cambios acotados y 2,86 veces en diseño. Esos cocientes describen estas observaciones, realizadas en tandas distintas; no estiman un efecto aislado del nivel ni sostienen una regla general del triple. La comparación de tiempo con low, medium y high originales es más débil que la de tokens y aciertos. También los tokens de high cambiaron entre tandas: la mediana de acotadas pasó de 113.517 a 100.064 y la de diseño de 133.571 a 122.603. El control pequeño no permite separar cambios remotos del proveedor de variación de respuestas.
+
+### Comprobaciones y artefactos de la extensión
+
+El pre-registro quedó solo en el commit `b267ab7`, antes de las respuestas nuevas; el suplemento se fijó en `488a16c`, antes del piloto. Los 34 hashes originales siguieron coincidiendo antes del piloto y de la matriz, y el CSV original permaneció idéntico. Las 56 corridas nuevas y las dos del piloto tienen recibos separados; no se reintentó ninguna. La corrida nueva más larga duró 263,260 segundos, por debajo de 600, y los inicios registrados no superaron dos agentes simultáneos. Los nueve tests locales del arnés original y del suplemento pasaron. El inicio real de una pareja se invirtió dentro de su tanda: la corrida de orden previsto 32 (control high de planificador) comenzó 26 milisegundos antes que la 31 (intervalos/max, repetición 3). La cola prevista y las tandas se conservaron; ambos inicios reales quedaron registrados, sin reordenar observaciones ni repetirlas.
+
+El [CSV nuevo](crudo-extension.csv) distingue las 48 principales por los niveles xhigh/max y los ocho controles por high e identificadores con `control`. El [piloto excluido](piloto-extension.csv), el [orden completo](orden-extension.json), los [recibos nuevos](extension-01/recibos/), los [módulos nuevos](extension-01/codigo/) y la [comprobación del congelado](extension-01/verificacion-congelado.json) permiten revisar cada observación. `python3 extension.py resumir` recalcula las tablas y conserva esta lectura, sin reescribir el texto original del resumen.
+
+### Lo que este experimento no demuestra
+
+La extensión conserva las limitaciones originales: un modelo, una versión del CLI, Python, tareas artificiales y tres repeticiones por tarea y nivel. Los tests son evidencia funcional parcial y no prueban ausencia de errores. Los controles high tienen una sola repetición nueva por tarea y no eliminan la diferencia temporal entre tandas. No se midieron dinero, limpieza, calidad de mantenimiento ni un porcentaje del código; la semilla fija el orden, no las respuestas. El resultado no se puede trasladar sin más a otros modelos, tareas, repositorios o producción.
+
+### Qué se puede decir en un reel
+
+En este banco, cada uno de los cinco niveles resolvió 24 de 24 corridas, y los ocho controles high también pasaron, sin cambios fuera de alcance. Max tuvo medianas de 91,4 segundos en cambios acotados y 161,4 en diseño, frente a 40,1 y 56,4 de medium; la comparación corresponde a tandas distintas y el control high mostró variaciones entre tareas. Estos datos no muestran más aciertos con xhigh o max, no sostienen una regla general del triple de tiempo y no miden el “90 % del código más limpio”.

@@ -1,0 +1,13 @@
+{
+  "fase": "extension",
+  "tarea": "03-importes",
+  "tipo": "acotada",
+  "nivel": "xhigh",
+  "repeticion": 2,
+  "id": "extension-03-importes-xhigh-2",
+  "orden": 54,
+  "inicio_utc": "2026-11-13T18:54:35.528564+00:00",
+  "inicio_monotonic_ns": 2273004709103577,
+  "orden_real_inicio": 56,
+  "concurrencia_al_inicio": 2
+}

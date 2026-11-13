@@ -1,0 +1,13 @@
+{
+  "fase": "extension",
+  "tarea": "07-planificador",
+  "tipo": "diseño",
+  "nivel": "xhigh",
+  "repeticion": 3,
+  "id": "extension-07-planificador-xhigh-3",
+  "orden": 26,
+  "inicio_utc": "2026-11-13T18:18:21.796414+00:00",
+  "inicio_monotonic_ns": 2270830976962958,
+  "orden_real_inicio": 28,
+  "concurrencia_al_inicio": 2
+}

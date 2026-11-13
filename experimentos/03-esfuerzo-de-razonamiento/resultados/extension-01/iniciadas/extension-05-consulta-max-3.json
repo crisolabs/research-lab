@@ -1,0 +1,13 @@
+{
+  "fase": "extension",
+  "tarea": "05-consulta",
+  "tipo": "acotada",
+  "nivel": "max",
+  "repeticion": 3,
+  "id": "extension-05-consulta-max-3",
+  "orden": 11,
+  "inicio_utc": "2026-11-13T18:03:25.846229+00:00",
+  "inicio_monotonic_ns": 2269935026788098,
+  "orden_real_inicio": 13,
+  "concurrencia_al_inicio": 1
+}

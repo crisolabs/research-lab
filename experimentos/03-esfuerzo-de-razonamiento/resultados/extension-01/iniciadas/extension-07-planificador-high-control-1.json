@@ -1,0 +1,13 @@
+{
+  "fase": "extension",
+  "tarea": "07-planificador",
+  "tipo": "diseño",
+  "nivel": "high",
+  "repeticion": 1,
+  "id": "extension-07-planificador-high-control-1",
+  "orden": 32,
+  "inicio_utc": "2026-11-13T18:25:16.213708+00:00",
+  "inicio_monotonic_ns": 2271245394262073,
+  "orden_real_inicio": 33,
+  "concurrencia_al_inicio": 1
+}

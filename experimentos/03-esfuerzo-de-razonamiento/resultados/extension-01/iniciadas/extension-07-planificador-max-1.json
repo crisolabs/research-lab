@@ -1,0 +1,13 @@
+{
+  "fase": "extension",
+  "tarea": "07-planificador",
+  "tipo": "diseño",
+  "nivel": "max",
+  "repeticion": 1,
+  "id": "extension-07-planificador-max-1",
+  "orden": 49,
+  "inicio_utc": "2026-11-13T18:49:04.040403+00:00",
+  "inicio_monotonic_ns": 2272673221306640,
+  "orden_real_inicio": 51,
+  "concurrencia_al_inicio": 1
+}

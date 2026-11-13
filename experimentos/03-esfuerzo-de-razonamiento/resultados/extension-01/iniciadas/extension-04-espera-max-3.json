@@ -1,0 +1,13 @@
+{
+  "fase": "extension",
+  "tarea": "04-espera",
+  "tipo": "acotada",
+  "nivel": "max",
+  "repeticion": 3,
+  "id": "extension-04-espera-max-3",
+  "orden": 51,
+  "inicio_utc": "2026-11-13T18:51:34.196744+00:00",
+  "inicio_monotonic_ns": 2272823377295075,
+  "orden_real_inicio": 53,
+  "concurrencia_al_inicio": 1
+}

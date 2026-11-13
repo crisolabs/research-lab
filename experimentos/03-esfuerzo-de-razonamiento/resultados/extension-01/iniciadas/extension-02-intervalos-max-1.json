@@ -1,0 +1,13 @@
+{
+  "fase": "extension",
+  "tarea": "02-intervalos",
+  "tipo": "acotada",
+  "nivel": "max",
+  "repeticion": 1,
+  "id": "extension-02-intervalos-max-1",
+  "orden": 10,
+  "inicio_utc": "2026-11-13T18:00:44.418141+00:00",
+  "inicio_monotonic_ns": 2269773598694829,
+  "orden_real_inicio": 12,
+  "concurrencia_al_inicio": 2
+}

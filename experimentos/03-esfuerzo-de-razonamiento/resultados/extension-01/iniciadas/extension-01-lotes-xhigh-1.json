@@ -1,0 +1,13 @@
+{
+  "fase": "extension",
+  "tarea": "01-lotes",
+  "tipo": "acotada",
+  "nivel": "xhigh",
+  "repeticion": 1,
+  "id": "extension-01-lotes-xhigh-1",
+  "orden": 47,
+  "inicio_utc": "2026-11-13T18:47:42.299855+00:00",
+  "inicio_monotonic_ns": 2272591480420244,
+  "orden_real_inicio": 49,
+  "concurrencia_al_inicio": 1
+}

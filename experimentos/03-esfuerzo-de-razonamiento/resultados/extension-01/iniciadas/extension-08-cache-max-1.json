@@ -1,0 +1,13 @@
+{
+  "fase": "extension",
+  "tarea": "08-cache",
+  "tipo": "diseño",
+  "nivel": "max",
+  "repeticion": 1,
+  "id": "extension-08-cache-max-1",
+  "orden": 23,
+  "inicio_utc": "2026-11-13T18:16:34.061119+00:00",
+  "inicio_monotonic_ns": 2270723241664569,
+  "orden_real_inicio": 25,
+  "concurrencia_al_inicio": 1
+}

@@ -1,0 +1,37 @@
+{
+  "corridas_nuevas": 56,
+  "principales_xhigh": 24,
+  "principales_max": 24,
+  "controles_high": 8,
+  "piloto_excluido": 2,
+  "resueltas_nuevas": 56,
+  "errores_cli": 0,
+  "timeouts": 0,
+  "fuera_alcance": 0,
+  "recibos_concordantes": 58,
+  "archivos_congelados_coincidentes": 34,
+  "crudo_original_identico_700cef0": true,
+  "resumen_original_prefijo_intacto_700cef0": true,
+  "orden_tandas_coincide_plan": true,
+  "inversiones_inicio_dentro_tanda": [
+    {
+      "posicion_real": 31,
+      "orden_previsto": 32,
+      "id": "extension-07-planificador-high-control-1"
+    },
+    {
+      "posicion_real": 32,
+      "orden_previsto": 31,
+      "id": "extension-02-intervalos-max-3"
+    }
+  ],
+  "diferencia_inicios_invertidos_milisegundos": 26.087,
+  "max_concurrencia_registrada": 2,
+  "max_segundos": 263.26,
+  "tests_locales_aprobados": 9,
+  "privacidad_sin_hallazgos": true,
+  "prerregistro_commit": "b267ab78a298a231cb49e204f7b6a46af9bc1ede",
+  "suplemento_commit": "488a16c",
+  "orden_json_guardado_antes_de_lanzar_sin_commit_previo": true,
+  "crudo_original_sha256": "4ae908741b59a26a129d61fbfea6778bcd2d7e13b4130c4b60d02b7f8f3b2399"
+}

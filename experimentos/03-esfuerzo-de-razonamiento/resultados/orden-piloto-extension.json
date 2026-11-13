@@ -1,0 +1,20 @@
+[
+  {
+    "fase": "piloto-extension",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "max",
+    "repeticion": 1,
+    "id": "piloto-extension-01-lotes-max-1",
+    "orden": 1
+  },
+  {
+    "fase": "piloto-extension",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "xhigh",
+    "repeticion": 1,
+    "id": "piloto-extension-01-lotes-xhigh-1",
+    "orden": 2
+  }
+]

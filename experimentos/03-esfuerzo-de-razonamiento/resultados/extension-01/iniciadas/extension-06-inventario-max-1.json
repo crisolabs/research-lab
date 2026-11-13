@@ -1,0 +1,13 @@
+{
+  "fase": "extension",
+  "tarea": "06-inventario",
+  "tipo": "diseño",
+  "nivel": "max",
+  "repeticion": 1,
+  "id": "extension-06-inventario-max-1",
+  "orden": 43,
+  "inicio_utc": "2026-11-13T18:41:11.734785+00:00",
+  "inicio_monotonic_ns": 2272200915341795,
+  "orden_real_inicio": 45,
+  "concurrencia_al_inicio": 1
+}
