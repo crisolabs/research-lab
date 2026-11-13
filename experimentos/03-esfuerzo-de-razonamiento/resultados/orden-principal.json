@@ -1,0 +1,650 @@
+[
+  {
+    "fase": "principal",
+    "tarea": "06-inventario",
+    "tipo": "diseño",
+    "nivel": "medium",
+    "repeticion": 2,
+    "id": "principal-06-inventario-medium-2",
+    "orden": 1
+  },
+  {
+    "fase": "principal",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 1,
+    "id": "principal-01-lotes-high-1",
+    "orden": 2
+  },
+  {
+    "fase": "principal",
+    "tarea": "07-planificador",
+    "tipo": "diseño",
+    "nivel": "medium",
+    "repeticion": 1,
+    "id": "principal-07-planificador-medium-1",
+    "orden": 3
+  },
+  {
+    "fase": "principal",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 3,
+    "id": "principal-01-lotes-medium-3",
+    "orden": 4
+  },
+  {
+    "fase": "principal",
+    "tarea": "07-planificador",
+    "tipo": "diseño",
+    "nivel": "medium",
+    "repeticion": 3,
+    "id": "principal-07-planificador-medium-3",
+    "orden": 5
+  },
+  {
+    "fase": "principal",
+    "tarea": "04-espera",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 1,
+    "id": "principal-04-espera-high-1",
+    "orden": 6
+  },
+  {
+    "fase": "principal",
+    "tarea": "03-importes",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 3,
+    "id": "principal-03-importes-low-3",
+    "orden": 7
+  },
+  {
+    "fase": "principal",
+    "tarea": "08-cache",
+    "tipo": "diseño",
+    "nivel": "medium",
+    "repeticion": 1,
+    "id": "principal-08-cache-medium-1",
+    "orden": 8
+  },
+  {
+    "fase": "principal",
+    "tarea": "03-importes",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 3,
+    "id": "principal-03-importes-high-3",
+    "orden": 9
+  },
+  {
+    "fase": "principal",
+    "tarea": "04-espera",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 2,
+    "id": "principal-04-espera-low-2",
+    "orden": 10
+  },
+  {
+    "fase": "principal",
+    "tarea": "04-espera",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 3,
+    "id": "principal-04-espera-low-3",
+    "orden": 11
+  },
+  {
+    "fase": "principal",
+    "tarea": "04-espera",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 2,
+    "id": "principal-04-espera-high-2",
+    "orden": 12
+  },
+  {
+    "fase": "principal",
+    "tarea": "08-cache",
+    "tipo": "diseño",
+    "nivel": "high",
+    "repeticion": 2,
+    "id": "principal-08-cache-high-2",
+    "orden": 13
+  },
+  {
+    "fase": "principal",
+    "tarea": "03-importes",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 3,
+    "id": "principal-03-importes-medium-3",
+    "orden": 14
+  },
+  {
+    "fase": "principal",
+    "tarea": "02-intervalos",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 1,
+    "id": "principal-02-intervalos-high-1",
+    "orden": 15
+  },
+  {
+    "fase": "principal",
+    "tarea": "06-inventario",
+    "tipo": "diseño",
+    "nivel": "high",
+    "repeticion": 2,
+    "id": "principal-06-inventario-high-2",
+    "orden": 16
+  },
+  {
+    "fase": "principal",
+    "tarea": "05-consulta",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 2,
+    "id": "principal-05-consulta-low-2",
+    "orden": 17
+  },
+  {
+    "fase": "principal",
+    "tarea": "02-intervalos",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 1,
+    "id": "principal-02-intervalos-low-1",
+    "orden": 18
+  },
+  {
+    "fase": "principal",
+    "tarea": "05-consulta",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 1,
+    "id": "principal-05-consulta-high-1",
+    "orden": 19
+  },
+  {
+    "fase": "principal",
+    "tarea": "03-importes",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 1,
+    "id": "principal-03-importes-high-1",
+    "orden": 20
+  },
+  {
+    "fase": "principal",
+    "tarea": "06-inventario",
+    "tipo": "diseño",
+    "nivel": "high",
+    "repeticion": 1,
+    "id": "principal-06-inventario-high-1",
+    "orden": 21
+  },
+  {
+    "fase": "principal",
+    "tarea": "02-intervalos",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 3,
+    "id": "principal-02-intervalos-low-3",
+    "orden": 22
+  },
+  {
+    "fase": "principal",
+    "tarea": "02-intervalos",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 2,
+    "id": "principal-02-intervalos-medium-2",
+    "orden": 23
+  },
+  {
+    "fase": "principal",
+    "tarea": "05-consulta",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 1,
+    "id": "principal-05-consulta-medium-1",
+    "orden": 24
+  },
+  {
+    "fase": "principal",
+    "tarea": "02-intervalos",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 3,
+    "id": "principal-02-intervalos-medium-3",
+    "orden": 25
+  },
+  {
+    "fase": "principal",
+    "tarea": "06-inventario",
+    "tipo": "diseño",
+    "nivel": "low",
+    "repeticion": 1,
+    "id": "principal-06-inventario-low-1",
+    "orden": 26
+  },
+  {
+    "fase": "principal",
+    "tarea": "07-planificador",
+    "tipo": "diseño",
+    "nivel": "low",
+    "repeticion": 2,
+    "id": "principal-07-planificador-low-2",
+    "orden": 27
+  },
+  {
+    "fase": "principal",
+    "tarea": "06-inventario",
+    "tipo": "diseño",
+    "nivel": "medium",
+    "repeticion": 1,
+    "id": "principal-06-inventario-medium-1",
+    "orden": 28
+  },
+  {
+    "fase": "principal",
+    "tarea": "05-consulta",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 1,
+    "id": "principal-05-consulta-low-1",
+    "orden": 29
+  },
+  {
+    "fase": "principal",
+    "tarea": "08-cache",
+    "tipo": "diseño",
+    "nivel": "low",
+    "repeticion": 1,
+    "id": "principal-08-cache-low-1",
+    "orden": 30
+  },
+  {
+    "fase": "principal",
+    "tarea": "08-cache",
+    "tipo": "diseño",
+    "nivel": "medium",
+    "repeticion": 3,
+    "id": "principal-08-cache-medium-3",
+    "orden": 31
+  },
+  {
+    "fase": "principal",
+    "tarea": "02-intervalos",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 3,
+    "id": "principal-02-intervalos-high-3",
+    "orden": 32
+  },
+  {
+    "fase": "principal",
+    "tarea": "05-consulta",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 2,
+    "id": "principal-05-consulta-medium-2",
+    "orden": 33
+  },
+  {
+    "fase": "principal",
+    "tarea": "04-espera",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 1,
+    "id": "principal-04-espera-medium-1",
+    "orden": 34
+  },
+  {
+    "fase": "principal",
+    "tarea": "08-cache",
+    "tipo": "diseño",
+    "nivel": "high",
+    "repeticion": 3,
+    "id": "principal-08-cache-high-3",
+    "orden": 35
+  },
+  {
+    "fase": "principal",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 2,
+    "id": "principal-01-lotes-medium-2",
+    "orden": 36
+  },
+  {
+    "fase": "principal",
+    "tarea": "02-intervalos",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 2,
+    "id": "principal-02-intervalos-low-2",
+    "orden": 37
+  },
+  {
+    "fase": "principal",
+    "tarea": "08-cache",
+    "tipo": "diseño",
+    "nivel": "low",
+    "repeticion": 3,
+    "id": "principal-08-cache-low-3",
+    "orden": 38
+  },
+  {
+    "fase": "principal",
+    "tarea": "03-importes",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 1,
+    "id": "principal-03-importes-low-1",
+    "orden": 39
+  },
+  {
+    "fase": "principal",
+    "tarea": "03-importes",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 1,
+    "id": "principal-03-importes-medium-1",
+    "orden": 40
+  },
+  {
+    "fase": "principal",
+    "tarea": "07-planificador",
+    "tipo": "diseño",
+    "nivel": "high",
+    "repeticion": 2,
+    "id": "principal-07-planificador-high-2",
+    "orden": 41
+  },
+  {
+    "fase": "principal",
+    "tarea": "06-inventario",
+    "tipo": "diseño",
+    "nivel": "high",
+    "repeticion": 3,
+    "id": "principal-06-inventario-high-3",
+    "orden": 42
+  },
+  {
+    "fase": "principal",
+    "tarea": "07-planificador",
+    "tipo": "diseño",
+    "nivel": "high",
+    "repeticion": 1,
+    "id": "principal-07-planificador-high-1",
+    "orden": 43
+  },
+  {
+    "fase": "principal",
+    "tarea": "08-cache",
+    "tipo": "diseño",
+    "nivel": "low",
+    "repeticion": 2,
+    "id": "principal-08-cache-low-2",
+    "orden": 44
+  },
+  {
+    "fase": "principal",
+    "tarea": "04-espera",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 1,
+    "id": "principal-04-espera-low-1",
+    "orden": 45
+  },
+  {
+    "fase": "principal",
+    "tarea": "05-consulta",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 3,
+    "id": "principal-05-consulta-high-3",
+    "orden": 46
+  },
+  {
+    "fase": "principal",
+    "tarea": "04-espera",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 3,
+    "id": "principal-04-espera-medium-3",
+    "orden": 47
+  },
+  {
+    "fase": "principal",
+    "tarea": "07-planificador",
+    "tipo": "diseño",
+    "nivel": "low",
+    "repeticion": 1,
+    "id": "principal-07-planificador-low-1",
+    "orden": 48
+  },
+  {
+    "fase": "principal",
+    "tarea": "06-inventario",
+    "tipo": "diseño",
+    "nivel": "medium",
+    "repeticion": 3,
+    "id": "principal-06-inventario-medium-3",
+    "orden": 49
+  },
+  {
+    "fase": "principal",
+    "tarea": "06-inventario",
+    "tipo": "diseño",
+    "nivel": "low",
+    "repeticion": 3,
+    "id": "principal-06-inventario-low-3",
+    "orden": 50
+  },
+  {
+    "fase": "principal",
+    "tarea": "05-consulta",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 2,
+    "id": "principal-05-consulta-high-2",
+    "orden": 51
+  },
+  {
+    "fase": "principal",
+    "tarea": "05-consulta",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 3,
+    "id": "principal-05-consulta-medium-3",
+    "orden": 52
+  },
+  {
+    "fase": "principal",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 1,
+    "id": "principal-01-lotes-low-1",
+    "orden": 53
+  },
+  {
+    "fase": "principal",
+    "tarea": "04-espera",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 2,
+    "id": "principal-04-espera-medium-2",
+    "orden": 54
+  },
+  {
+    "fase": "principal",
+    "tarea": "07-planificador",
+    "tipo": "diseño",
+    "nivel": "low",
+    "repeticion": 3,
+    "id": "principal-07-planificador-low-3",
+    "orden": 55
+  },
+  {
+    "fase": "principal",
+    "tarea": "08-cache",
+    "tipo": "diseño",
+    "nivel": "medium",
+    "repeticion": 2,
+    "id": "principal-08-cache-medium-2",
+    "orden": 56
+  },
+  {
+    "fase": "principal",
+    "tarea": "03-importes",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 2,
+    "id": "principal-03-importes-low-2",
+    "orden": 57
+  },
+  {
+    "fase": "principal",
+    "tarea": "05-consulta",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 3,
+    "id": "principal-05-consulta-low-3",
+    "orden": 58
+  },
+  {
+    "fase": "principal",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 2,
+    "id": "principal-01-lotes-high-2",
+    "orden": 59
+  },
+  {
+    "fase": "principal",
+    "tarea": "04-espera",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 3,
+    "id": "principal-04-espera-high-3",
+    "orden": 60
+  },
+  {
+    "fase": "principal",
+    "tarea": "07-planificador",
+    "tipo": "diseño",
+    "nivel": "high",
+    "repeticion": 3,
+    "id": "principal-07-planificador-high-3",
+    "orden": 61
+  },
+  {
+    "fase": "principal",
+    "tarea": "03-importes",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 2,
+    "id": "principal-03-importes-high-2",
+    "orden": 62
+  },
+  {
+    "fase": "principal",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 1,
+    "id": "principal-01-lotes-medium-1",
+    "orden": 63
+  },
+  {
+    "fase": "principal",
+    "tarea": "02-intervalos",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 1,
+    "id": "principal-02-intervalos-medium-1",
+    "orden": 64
+  },
+  {
+    "fase": "principal",
+    "tarea": "08-cache",
+    "tipo": "diseño",
+    "nivel": "high",
+    "repeticion": 1,
+    "id": "principal-08-cache-high-1",
+    "orden": 65
+  },
+  {
+    "fase": "principal",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 3,
+    "id": "principal-01-lotes-high-3",
+    "orden": 66
+  },
+  {
+    "fase": "principal",
+    "tarea": "07-planificador",
+    "tipo": "diseño",
+    "nivel": "medium",
+    "repeticion": 2,
+    "id": "principal-07-planificador-medium-2",
+    "orden": 67
+  },
+  {
+    "fase": "principal",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 2,
+    "id": "principal-01-lotes-low-2",
+    "orden": 68
+  },
+  {
+    "fase": "principal",
+    "tarea": "06-inventario",
+    "tipo": "diseño",
+    "nivel": "low",
+    "repeticion": 2,
+    "id": "principal-06-inventario-low-2",
+    "orden": 69
+  },
+  {
+    "fase": "principal",
+    "tarea": "02-intervalos",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 2,
+    "id": "principal-02-intervalos-high-2",
+    "orden": 70
+  },
+  {
+    "fase": "principal",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 3,
+    "id": "principal-01-lotes-low-3",
+    "orden": 71
+  },
+  {
+    "fase": "principal",
+    "tarea": "03-importes",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 2,
+    "id": "principal-03-importes-medium-2",
+    "orden": 72
+  }
+]

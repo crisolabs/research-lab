@@ -1,0 +1,29 @@
+[
+  {
+    "fase": "piloto",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "medium",
+    "repeticion": 1,
+    "id": "piloto-01-lotes-medium-1",
+    "orden": 1
+  },
+  {
+    "fase": "piloto",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "high",
+    "repeticion": 1,
+    "id": "piloto-01-lotes-high-1",
+    "orden": 2
+  },
+  {
+    "fase": "piloto",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "nivel": "low",
+    "repeticion": 1,
+    "id": "piloto-01-lotes-low-1",
+    "orden": 3
+  }
+]

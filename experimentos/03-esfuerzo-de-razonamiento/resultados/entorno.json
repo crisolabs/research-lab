@@ -1,0 +1,13 @@
+{
+  "modelo": "gpt-6.1-sol",
+  "cli": "codex-cli 0.166.0",
+  "python": "3.12.3",
+  "semilla": 20261113,
+  "timeout_segundos": 600,
+  "max_paralelo": 2,
+  "prompt": "Leé TAREA.md y resolvé la tarea implementando los requisitos completos. Editá sólo el módulo permitido. Usá herramientas locales si las necesitás. No accedas a Internet ni delegues. No agregues tests ni documentación. No leas archivos de configuración o autenticación del CLI. Al terminar, describí brevemente qué cambiaste.",
+  "aislamiento": "bubblewrap externo: sin archivos del host salvo runtime, bibliotecas, certificados y auth oficial en bind de solo lectura; sandbox workspace-write del CLI para herramientas, sin red",
+  "limite_auth": "El CLI necesita leer auth oficial. El bind es sólo lectura y no se copia; no se afirma que un agente malicioso no pueda leerlo.",
+  "eventos_guardados": "Sólo tipos de evento y uso; no texto de conversaciones ni configuración de cuentas",
+  "orden_aleatorio": "random.Random(20261113).shuffle, separado para piloto y principal"
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "tarea": "01-lotes",
+    "inicio_pasa": false,
+    "inicio_aprobados": 0,
+    "inicio_total": 3,
+    "referencia_pasa": true,
+    "referencia_aprobados": 3,
+    "referencia_total": 3
+  },
+  {
+    "tarea": "02-intervalos",
+    "inicio_pasa": false,
+    "inicio_aprobados": 0,
+    "inicio_total": 3,
+    "referencia_pasa": true,
+    "referencia_aprobados": 3,
+    "referencia_total": 3
+  },
+  {
+    "tarea": "03-importes",
+    "inicio_pasa": false,
+    "inicio_aprobados": 0,
+    "inicio_total": 2,
+    "referencia_pasa": true,
+    "referencia_aprobados": 2,
+    "referencia_total": 2
+  },
+  {
+    "tarea": "04-espera",
+    "inicio_pasa": false,
+    "inicio_aprobados": 0,
+    "inicio_total": 2,
+    "referencia_pasa": true,
+    "referencia_aprobados": 2,
+    "referencia_total": 2
+  },
+  {
+    "tarea": "05-consulta",
+    "inicio_pasa": false,
+    "inicio_aprobados": 0,
+    "inicio_total": 3,
+    "referencia_pasa": true,
+    "referencia_aprobados": 3,
+    "referencia_total": 3
+  },
+  {
+    "tarea": "06-inventario",
+    "inicio_pasa": false,
+    "inicio_aprobados": 0,
+    "inicio_total": 1,
+    "referencia_pasa": true,
+    "referencia_aprobados": 5,
+    "referencia_total": 5
+  },
+  {
+    "tarea": "07-planificador",
+    "inicio_pasa": false,
+    "inicio_aprobados": 0,
+    "inicio_total": 1,
+    "referencia_pasa": true,
+    "referencia_aprobados": 5,
+    "referencia_total": 5
+  },
+  {
+    "tarea": "08-cache",
+    "inicio_pasa": false,
+    "inicio_aprobados": 0,
+    "inicio_total": 1,
+    "referencia_pasa": true,
+    "referencia_aprobados": 6,
+    "referencia_total": 6
+  }
+]

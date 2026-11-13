@@ -1,0 +1,4 @@
+id,fase,orden,tarea,tipo,repeticion,nivel,inicio_utc,estado,inicio_monotonic_ns,orden_real_inicio,concurrencia_al_inicio,retorno_cli,timeout,tests_aprobados,tests_total,resuelta,tokens_entrada,tokens_cache,tokens_salida,tokens_razonamiento,tokens_totales,segundos,lineas_agregadas,lineas_borradas,lineas_tocadas,fuera_alcance,archivos_extra,binarios,error
+piloto-01-lotes-medium-1,piloto,1,01-lotes,acotada,1,medium,2026-11-13T14:12:01.782699+00:00,completa,2256050963258358,1,1,0,0,3,3,1,97866,91520,922,0,98788,39.987,13,1,14,0,[],[],
+piloto-01-lotes-high-1,piloto,2,01-lotes,acotada,1,high,2026-11-13T14:12:01.925070+00:00,completa,2256051105630525,2,2,0,0,3,3,1,97418,92032,662,70,98080,33.266,15,1,16,0,[],[],
+piloto-01-lotes-low-1,piloto,3,01-lotes,acotada,1,low,2026-11-13T14:12:42.154479+00:00,completa,2256091335053462,3,1,0,0,3,3,1,112239,107520,891,0,113130,34.066,13,1,14,0,[],[],
