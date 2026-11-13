@@ -1,0 +1,37 @@
+{
+  "alcance": "Datos de extensión02 y sus tablas, sin nuevas inferencias. Revisión independiente final pendiente.",
+  "hashes_banco_coinciden": 34,
+  "csv_previos_intactos": 4,
+  "resumen_previo_preservado": true,
+  "readme_solo_fila03": true,
+  "csv_vs_corridas_sin_diferencias": true,
+  "concurrencia_registrada_maxima": 2,
+  "reproduccion_resumen_mismo_sha256": true,
+  "tests_locales": {
+    "comando": "python3 -m unittest discover -s experimentos/03-esfuerzo-de-razonamiento -p test_*.py",
+    "aprobados": 27
+  },
+  "privacy": {
+    "patrones_privados_en_datos_y_texto_publico": 0,
+    "limite": "Revisión de patrones y artefactos; no es una garantía general para cualquier secreto textual."
+  },
+  "piloto_luna_csv": {
+    "cambio_derivado_detectado": "Columna advertencias vacía al reexportar; ningún valor previo cambió.",
+    "accion": "CSV restaurado byte a byte al commit de respaldo; no queda modificación."
+  },
+  "lock_runtime": "Ignorado por .gitignore local; no versionado.",
+  "codigo_medicion_sha256": "2ce9a5e3315f465f09157ae392e370304e2d8c8d505ba99404178b5b625291a4",
+  "generador_resumen_sha256": "8d4d32090153f3f6121a89017df64a24bc02a889bf83eb0561f4f9b1cccd44dc",
+  "conteos": {
+    "observadas_principales": 122,
+    "evaluables": 121,
+    "resueltas_evaluables": 110,
+    "fallos_funcionales": 11,
+    "infraestructura": 1,
+    "cuota": 0,
+    "timeouts": 0,
+    "pilotos_excluidos": 3,
+    "sondeos_excluidos": 16
+  },
+  "sha256_resumen": "3b4cc11a1bf5ff223fc5dd686e72e91d7cfbb0aaa34e9acebf9781f17cfea854"
+}

@@ -1,0 +1,46 @@
+{
+  "tipos_eventos": [
+    "thread.started",
+    "turn.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "error",
+    "error",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.completed",
+    "turn.completed"
+  ],
+  "uso": {
+    "input_tokens": 179609,
+    "cached_input_tokens": 167040,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5263,
+    "reasoning_output_tokens": 3611
+  },
+  "uso_por_modelo": {},
+  "advertencias": [
+    "Reconnecting... 2/5 (stream disconnected before completion: IO error: Connection reset by peer (os error 104))",
+    "Reconnecting... 3/5 (stream disconnected before completion: IO error: Connection reset by peer (os error 104))"
+  ]
+}

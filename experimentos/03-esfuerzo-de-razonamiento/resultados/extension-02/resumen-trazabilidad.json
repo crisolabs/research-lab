@@ -1,0 +1,44 @@
+{
+  "generador": "resumir02.py",
+  "generador_sha256": "8d4d32090153f3f6121a89017df64a24bc02a889bf83eb0561f4f9b1cccd44dc",
+  "motivo": "Resumen separado; no modifica el arnés de medición ni sus hashes registrados.",
+  "codigo_medicion_sha256": "2ce9a5e3315f465f09157ae392e370304e2d8c8d505ba99404178b5b625291a4",
+  "csv_entrada_sha256": {
+    "crudo.csv": "4ae908741b59a26a129d61fbfea6778bcd2d7e13b4130c4b60d02b7f8f3b2399",
+    "crudo-extension.csv": "f330f69ffbe19307d74d562c33874e129fd2f9a05ed94db8d45029b8fb2c088a",
+    "crudo-gpt-6-luna.csv": "28562cbcbe84354c16929c3b23591370d403ab925aee7c9417059d7bdadaaa9a",
+    "crudo-claude-haiku-5-5.csv": "afc4de35ae516dc002d2c25e585c3c46a4cc77c14a21781a485a817eaa07c398",
+    "crudo-claude-opus-5-5.csv": "8178cdf42cae31c4973baf8adabcf4fcdc2a199700c2c33d4b534b202c907e7a",
+    "crudo-fable.csv": "afc4de35ae516dc002d2c25e585c3c46a4cc77c14a21781a485a817eaa07c398"
+  },
+  "conteos": {
+    "observadas_principales": 122,
+    "evaluables": 121,
+    "resueltas_evaluables": 110,
+    "fallos_funcionales": 11,
+    "infraestructura": 1,
+    "cuota": 0,
+    "timeouts": 0,
+    "pilotos_excluidos": 3,
+    "sondeos_excluidos": 16
+  },
+  "razones_sobre_medianas_crudas": {
+    "gpt-6.1-sol": {
+      "segundos_bajo": "41.0885",
+      "segundos_alto": "102.009",
+      "razon_tiempo": "2.482665466006303466906798739",
+      "tokens_bajo": "95548.5",
+      "tokens_alto": "132109.5",
+      "razon_tokens": "1.382643369597638895430069546"
+    },
+    "gpt-6-luna": {
+      "segundos_bajo": "38.928",
+      "segundos_alto": "96.8235",
+      "razon_tiempo": "2.487245684340320591861898890",
+      "tokens_bajo": "124518.5",
+      "tokens_alto": "148684",
+      "razon_tokens": "1.194071563663230764906419528"
+    }
+  },
+  "controles_sol_excluidos": 8
+}

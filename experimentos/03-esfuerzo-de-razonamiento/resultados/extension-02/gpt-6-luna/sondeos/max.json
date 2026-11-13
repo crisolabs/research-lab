@@ -1,0 +1,13 @@
+{
+  "retorno_cli": 0,
+  "timeout": 0,
+  "segundos": 7.327,
+  "error": "",
+  "error_textual": "",
+  "modelo_efectivo": "",
+  "tokens_entrada": 12659,
+  "tokens_cache": 11392,
+  "tokens_salida": 26,
+  "tokens_razonamiento": 19,
+  "tokens_totales": 12685
+}

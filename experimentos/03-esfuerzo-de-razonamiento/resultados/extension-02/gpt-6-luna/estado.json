@@ -1,0 +1,15 @@
+{
+  "modelo": "gpt-6-luna",
+  "proveedor": "openai",
+  "estado": "completo",
+  "niveles": [
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "motivo": "Retoma sólo nunca iniciadas tras ENMIENDA-02-01",
+  "observadas": 120,
+  "pendientes": 0
+}

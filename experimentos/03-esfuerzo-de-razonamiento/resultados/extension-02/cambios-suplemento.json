@@ -1,0 +1,9 @@
+[
+  {
+    "anterior_sha256": "622034d86b8b4557906158ab2e2b5ab0445d1026824e604c56ac636dd13d81f3",
+    "nuevo_sha256": "2ce9a5e3315f465f09157ae392e370304e2d8c8d505ba99404178b5b625291a4",
+    "commit_correccion": "5a006e8cd0f5812b2628ccac89ac6c9f10f0283d",
+    "nota": "ENMIENDA-02-01.md",
+    "alcance": "Sólo clasificación de reconexión de red recuperada antes de turn.completed; cuota nunca se ignora."
+  }
+]
