@@ -1,0 +1,51 @@
+{
+  "claude": {
+    "argv_publico": [
+      "/opt/claude",
+      "-p",
+      "Leé TAREA.md y resolvé la tarea implementando los requisitos completos. Editá sólo el módulo permitido. Usá herramientas locales si las necesitás. No accedas a Internet ni delegues. No agregues tests ni documentación. No leas archivos de configuración o autenticación del CLI. Al terminar, describí brevemente qué cambiaste.",
+      "--model",
+      "claude-haiku-5-5",
+      "--output-format",
+      "json",
+      "--restricted",
+      "--setting-sources",
+      "",
+      "--settings",
+      "{\"disableAllHooks\":true,\"autoMemoryEnabled\":false}",
+      "--strict-mcp-config",
+      "--mcp-config",
+      "{\"mcpServers\":{}}",
+      "--disable-slash-commands",
+      "--no-session-persistence",
+      "--no-chrome",
+      "--permission-mode",
+      "dontAsk",
+      "--tools",
+      "Read,Edit,Write,Bash",
+      "--allowedTools",
+      "Read",
+      "Edit",
+      "Write",
+      "Bash(python3:*)",
+      "--effort",
+      "low"
+    ],
+    "montajes": [
+      "runtime oficial de Claude en /opt/claude (sólo lectura)",
+      "credenciales oficiales en /user/.claude/.credentials.json (sólo lectura, sin copia)",
+      "/usr y certificados (sólo lectura)",
+      "copia nueva de tarea en /work (escritura)",
+      "HOME vacío excepto autenticación"
+    ],
+    "limites": [
+      "La red del proveedor está disponible al proceso.",
+      "Las credenciales oficiales son legibles por el proceso.",
+      "Permanecen instrucciones incorporadas del proveedor; no se inspecciona su contexto interno."
+    ]
+  },
+  "codex": {
+    "instrucciones_globales_usuario": true,
+    "limite": "Los flags de aislamiento no demuestran ausencia de instrucciones globales en el contexto efectivo."
+  }
+}

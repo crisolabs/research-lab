@@ -1,0 +1,14 @@
+{
+  "retorno_cli": 0,
+  "timeout": 0,
+  "segundos": 5.303,
+  "error": "",
+  "error_textual": "",
+  "modelo_efectivo": "claude-opus-5-5",
+  "advertencias": "[]",
+  "tokens_entrada": 2,
+  "tokens_cache": 1750,
+  "tokens_salida": 4,
+  "tokens_razonamiento": "",
+  "tokens_totales": 2049
+}

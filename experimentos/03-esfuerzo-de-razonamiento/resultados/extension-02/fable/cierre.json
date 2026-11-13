@@ -1,0 +1,18 @@
+{
+  "modelo_solicitado": "fable",
+  "version_solicitada": "Fable 5.2",
+  "modelos_informados": [
+    "claude-fable-5-1",
+    "claude-opus-4-8"
+  ],
+  "modelo_principal_declarado": "",
+  "motivo": "Identidad no verificable: el primer sondeo low devolvió uso de dos modelos, ninguno identificado como Fable 5.2, sin principal declarado.",
+  "sondeos_observados": 1,
+  "niveles_aceptados_para_matriz": [],
+  "principales_previstas": null,
+  "principales_maximas": 120,
+  "principales_observadas": 0,
+  "piloto_realizado": false,
+  "cuota": false,
+  "limite": "La llamada al alias completó con retorno0 y uso, pero no permite atribución al modelo pedido. No se hacen más sondeos, no se sustituye modelo y no se presenta esto como fallo funcional."
+}

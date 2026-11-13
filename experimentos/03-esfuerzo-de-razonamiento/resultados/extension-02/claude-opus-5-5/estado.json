@@ -1,0 +1,16 @@
+{
+  "modelo": "claude-opus-5-5",
+  "proveedor": "anthropic",
+  "estado": "incompleto",
+  "niveles": [
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "motivo": "permisos_incompatibles",
+  "observadas": 2,
+  "pendientes": 118,
+  "pilotos_observados": 1
+}

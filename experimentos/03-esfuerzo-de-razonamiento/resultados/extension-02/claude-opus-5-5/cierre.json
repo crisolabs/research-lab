@@ -1,0 +1,20 @@
+{
+  "modelo": "claude-opus-5-5",
+  "modelo_efectivo": "claude-opus-5-5",
+  "niveles_aceptados": [
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "principales_previstas": 120,
+  "principales_observadas": 2,
+  "principales_evaluables": 1,
+  "resueltas_evaluables": 1,
+  "principales_pendientes": 118,
+  "bloqueos_adaptador": 1,
+  "motivo": "Una denegación Bash de comando desconocido en lotes medium rep2, pese a retorno0 y tests3/3. La otra corrida de la tanda resolvió intervalos low rep3 con tests3/3 y sin denegaciones.",
+  "limite": "El recibo conserva sólo nombres de herramientas denegadas; no demuestra que Python permitido haya sido denegado ni incapacidad funcional. Se conserva el cierre conservador sin repetir observaciones.",
+  "cuota": false
+}

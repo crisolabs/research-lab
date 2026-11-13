@@ -1,0 +1,13 @@
+{
+  "modelo": "fable",
+  "proveedor": "anthropic",
+  "estado": "no_disponible",
+  "niveles": [],
+  "motivo": "identificador_no_verificable",
+  "pendientes": null,
+  "observadas": 0,
+  "modelos_informados": [
+    "claude-fable-5-1",
+    "claude-opus-4-8"
+  ]
+}

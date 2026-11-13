@@ -1,0 +1,49 @@
+{
+  "tipos_eventos": [
+    "result"
+  ],
+  "uso": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 1460,
+    "cache_read_input_tokens": 21906,
+    "output_tokens": 938,
+    "output_tokens_details": {
+      "thinking_tokens": 42
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1460,
+      "ephemeral_5m_input_tokens": 0
+    }
+  },
+  "uso_por_modelo": {
+    "claude-opus-5-5": {
+      "inputTokens": 8,
+      "outputTokens": 938,
+      "cacheReadInputTokens": 21906,
+      "cacheCreationInputTokens": 1460,
+      "webSearchRequests": 0,
+      "costUSD": 0.0348532,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 42,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 1460
+    }
+  },
+  "duration_ms": 19231,
+  "duration_api_ms": 17876,
+  "num_turns": 5,
+  "subtipo": "success",
+  "es_error": false,
+  "permisos_denegados": {
+    "cantidad": 1,
+    "herramientas": [
+      "Bash"
+    ]
+  },
+  "modelo_principal_declarado": ""
+}

@@ -1,0 +1,29 @@
+{
+  "modelo": "claude-haiku-5-5",
+  "modelo_efectivo": "claude-haiku-5-5",
+  "niveles_aceptados": [
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "principales_previstas": 120,
+  "principales_observadas": 0,
+  "principales_pendientes": 120,
+  "piloto_excluido": {
+    "estado": "infraestructura",
+    "motivo": "permisos_incompatibles",
+    "permisos_denegados": {
+      "cantidad": 1,
+      "herramientas": [
+        "Bash"
+      ]
+    },
+    "retorno_cli": 0,
+    "tests_aprobados": 3,
+    "tests_total": 3
+  },
+  "limite": "El recibo conserva sólo nombres de herramientas denegadas; no permite distinguir Python permitido de otro comando. No se repite el piloto ni se presenta el bloqueo como fallo funcional.",
+  "cuota": false
+}

@@ -1,0 +1,8 @@
+{
+  "id": "sondeo-max",
+  "nivel": "max",
+  "inicio_utc": "2026-11-13T22:00:13.959074+00:00",
+  "inicio_monotonic_ns": 2284143143073450,
+  "orden_real_inicio": 5,
+  "concurrencia_al_inicio": 1
+}

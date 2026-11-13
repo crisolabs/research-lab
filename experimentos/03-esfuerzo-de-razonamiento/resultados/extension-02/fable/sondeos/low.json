@@ -1,0 +1,14 @@
+{
+  "retorno_cli": 0,
+  "timeout": 0,
+  "segundos": 5.434,
+  "error": "identificador_no_verificable",
+  "error_textual": "",
+  "modelo_efectivo": "",
+  "advertencias": "[]",
+  "tokens_entrada": 4,
+  "tokens_cache": 649,
+  "tokens_salida": 4,
+  "tokens_razonamiento": "",
+  "tokens_totales": 7876
+}

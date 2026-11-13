@@ -1,0 +1,16 @@
+{
+  "modelo": "claude-haiku-5-5",
+  "proveedor": "anthropic",
+  "estado": "incompleto",
+  "niveles": [
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "motivo": "permisos_incompatibles",
+  "pendientes": 120,
+  "observadas": 0,
+  "pilotos_observados": 1
+}
