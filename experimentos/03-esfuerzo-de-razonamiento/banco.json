@@ -1,0 +1,58 @@
+[
+  {
+    "id": "01-lotes",
+    "tipo": "acotada",
+    "permitidos": [
+      "lotes.py"
+    ]
+  },
+  {
+    "id": "02-intervalos",
+    "tipo": "acotada",
+    "permitidos": [
+      "intervalos.py"
+    ]
+  },
+  {
+    "id": "03-importes",
+    "tipo": "acotada",
+    "permitidos": [
+      "importes.py"
+    ]
+  },
+  {
+    "id": "04-espera",
+    "tipo": "acotada",
+    "permitidos": [
+      "espera.py"
+    ]
+  },
+  {
+    "id": "05-consulta",
+    "tipo": "acotada",
+    "permitidos": [
+      "consulta.py"
+    ]
+  },
+  {
+    "id": "06-inventario",
+    "tipo": "diseño",
+    "permitidos": [
+      "inventario.py"
+    ]
+  },
+  {
+    "id": "07-planificador",
+    "tipo": "diseño",
+    "permitidos": [
+      "planificador.py"
+    ]
+  },
+  {
+    "id": "08-cache",
+    "tipo": "diseño",
+    "permitidos": [
+      "cache.py"
+    ]
+  }
+]

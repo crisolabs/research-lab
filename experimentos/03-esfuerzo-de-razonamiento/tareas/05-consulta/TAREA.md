@@ -1,0 +1,4 @@
+# Actualizar parámetros de una URL
+Corregí `actualizar(url, cambios)`, con `url` string y `cambios` un diccionario cuyas claves son strings y cuyos valores son strings o `None` (no hace falta validar otros tipos). Conservá esquema, autoridad, ruta y fragmento. Leé los pares de consulta manteniendo claves repetidas y valores vacíos. Para cada clave presente en cambios eliminá todas sus ocurrencias anteriores; si el nuevo valor no es `None`, agregá un par al final en orden de inserción de cambios. Conservá orden y repeticiones de las claves ajenas. Codificá la consulta con las convenciones de `urllib.parse.urlencode` y decodificala con `parse_qsl(..., keep_blank_values=True)`.
+
+Editá únicamente `consulta.py`. Usá sólo la biblioteca estándar de Python. No modifiques este enunciado ni agregues otros archivos. No accedas a Internet ni delegues.

@@ -1,0 +1,4 @@
+# Espera exponencial con jitter
+Corregí `espera(intento, base, tope, fraccion)`. `intento` es un entero no negativo (no booleano). `base` y `tope` son números int/float finitos, no booleanos, con `0 < base <= tope`. Tanto base como tope deben poder representarse como un `float` finito; un entero demasiado grande se rechaza con `ValueError`. `fraccion` es int/float finito entre 0 y 1 inclusive, no booleano. Lanzá `ValueError` si algún parámetro es inválido. Devolvé `min(tope, base * 2**intento) * fraccion`. No generes azar internamente. Debe funcionar para intentos enormes como 1000000 sin desbordar ni construir un entero exponencial gigante.
+
+Editá únicamente `espera.py`. Usá sólo la biblioteca estándar de Python. No modifiques este enunciado ni agregues otros archivos. No accedas a Internet ni delegues.
