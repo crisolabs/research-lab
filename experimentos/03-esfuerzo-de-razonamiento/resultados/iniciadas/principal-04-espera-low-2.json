@@ -1,0 +1,13 @@
+{
+  "fase": "principal",
+  "tarea": "04-espera",
+  "tipo": "acotada",
+  "nivel": "low",
+  "repeticion": 2,
+  "id": "principal-04-espera-low-2",
+  "orden": 10,
+  "inicio_utc": "2026-11-13T14:18:33.733195+00:00",
+  "inicio_monotonic_ns": 2256442913748229,
+  "orden_real_inicio": 13,
+  "concurrencia_al_inicio": 2
+}

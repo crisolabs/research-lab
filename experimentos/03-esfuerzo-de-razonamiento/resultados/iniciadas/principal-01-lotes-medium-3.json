@@ -1,0 +1,13 @@
+{
+  "fase": "principal",
+  "tarea": "01-lotes",
+  "tipo": "acotada",
+  "nivel": "medium",
+  "repeticion": 3,
+  "id": "principal-01-lotes-medium-3",
+  "orden": 4,
+  "inicio_utc": "2026-11-13T14:15:06.415434+00:00",
+  "inicio_monotonic_ns": 2256235595989248,
+  "orden_real_inicio": 7,
+  "concurrencia_al_inicio": 2
+}

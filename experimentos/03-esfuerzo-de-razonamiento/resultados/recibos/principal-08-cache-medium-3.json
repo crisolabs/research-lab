@@ -1,0 +1,29 @@
+{
+  "tipos_eventos": [
+    "thread.started",
+    "turn.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.completed",
+    "turn.completed"
+  ],
+  "uso": {
+    "input_tokens": 101017,
+    "cached_input_tokens": 94976,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1271,
+    "reasoning_output_tokens": 155
+  },
+  "stderr_bytes": 322
+}

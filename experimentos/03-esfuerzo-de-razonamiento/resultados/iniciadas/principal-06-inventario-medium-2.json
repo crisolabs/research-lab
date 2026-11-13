@@ -1,0 +1,13 @@
+{
+  "fase": "principal",
+  "tarea": "06-inventario",
+  "tipo": "diseño",
+  "nivel": "medium",
+  "repeticion": 2,
+  "id": "principal-06-inventario-medium-2",
+  "orden": 1,
+  "inicio_utc": "2026-11-13T14:13:53.499243+00:00",
+  "inicio_monotonic_ns": 2256162679802581,
+  "orden_real_inicio": 4,
+  "concurrencia_al_inicio": 1
+}

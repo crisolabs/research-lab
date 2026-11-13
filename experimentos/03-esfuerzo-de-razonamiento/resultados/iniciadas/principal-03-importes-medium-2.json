@@ -1,0 +1,13 @@
+{
+  "fase": "principal",
+  "tarea": "03-importes",
+  "tipo": "acotada",
+  "nivel": "medium",
+  "repeticion": 2,
+  "id": "principal-03-importes-medium-2",
+  "orden": 72,
+  "inicio_utc": "2026-11-13T14:51:10.411137+00:00",
+  "inicio_monotonic_ns": 2258399591690584,
+  "orden_real_inicio": 75,
+  "concurrencia_al_inicio": 2
+}

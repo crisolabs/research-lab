@@ -1,0 +1,13 @@
+{
+  "fase": "principal",
+  "tarea": "08-cache",
+  "tipo": "diseño",
+  "nivel": "high",
+  "repeticion": 2,
+  "id": "principal-08-cache-high-2",
+  "orden": 13,
+  "inicio_utc": "2026-11-13T14:20:51.765858+00:00",
+  "inicio_monotonic_ns": 2256580946396403,
+  "orden_real_inicio": 16,
+  "concurrencia_al_inicio": 1
+}

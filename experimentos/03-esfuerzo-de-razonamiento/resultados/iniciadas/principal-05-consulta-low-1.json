@@ -1,0 +1,13 @@
+{
+  "fase": "principal",
+  "tarea": "05-consulta",
+  "tipo": "acotada",
+  "nivel": "low",
+  "repeticion": 1,
+  "id": "principal-05-consulta-low-1",
+  "orden": 29,
+  "inicio_utc": "2026-11-13T14:29:09.416450+00:00",
+  "inicio_monotonic_ns": 2257078597026162,
+  "orden_real_inicio": 32,
+  "concurrencia_al_inicio": 1
+}

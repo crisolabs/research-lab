@@ -1,0 +1,13 @@
+{
+  "fase": "piloto",
+  "tarea": "01-lotes",
+  "tipo": "acotada",
+  "nivel": "low",
+  "repeticion": 1,
+  "id": "piloto-01-lotes-low-1",
+  "orden": 3,
+  "inicio_utc": "2026-11-13T14:12:42.154479+00:00",
+  "inicio_monotonic_ns": 2256091335053462,
+  "orden_real_inicio": 3,
+  "concurrencia_al_inicio": 1
+}

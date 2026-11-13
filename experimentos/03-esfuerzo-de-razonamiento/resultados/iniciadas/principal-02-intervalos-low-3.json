@@ -1,0 +1,13 @@
+{
+  "fase": "principal",
+  "tarea": "02-intervalos",
+  "tipo": "acotada",
+  "nivel": "low",
+  "repeticion": 3,
+  "id": "principal-02-intervalos-low-3",
+  "orden": 22,
+  "inicio_utc": "2026-11-13T14:24:58.581713+00:00",
+  "inicio_monotonic_ns": 2256827762265062,
+  "orden_real_inicio": 25,
+  "concurrencia_al_inicio": 2
+}

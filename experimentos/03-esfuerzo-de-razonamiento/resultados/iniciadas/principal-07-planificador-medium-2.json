@@ -1,0 +1,13 @@
+{
+  "fase": "principal",
+  "tarea": "07-planificador",
+  "tipo": "diseño",
+  "nivel": "medium",
+  "repeticion": 2,
+  "id": "principal-07-planificador-medium-2",
+  "orden": 67,
+  "inicio_utc": "2026-11-13T14:49:14.056351+00:00",
+  "inicio_monotonic_ns": 2258283236898888,
+  "orden_real_inicio": 70,
+  "concurrencia_al_inicio": 1
+}
