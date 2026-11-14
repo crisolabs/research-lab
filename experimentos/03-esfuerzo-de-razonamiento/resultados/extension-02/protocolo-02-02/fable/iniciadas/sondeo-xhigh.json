@@ -1,0 +1,8 @@
+{
+  "id": "sondeo-xhigh",
+  "nivel": "xhigh",
+  "inicio_utc": "2026-11-14T03:03:11.910945+00:00",
+  "inicio_monotonic_ns": 2302321094711148,
+  "orden_real_inicio": 4,
+  "concurrencia_al_inicio": 1
+}

@@ -1,0 +1,8 @@
+{
+  "id": "sondeo-low",
+  "nivel": "low",
+  "inicio_utc": "2026-11-13T22:29:57.661762+00:00",
+  "inicio_monotonic_ns": 2285926852753497,
+  "orden_real_inicio": 1,
+  "concurrencia_al_inicio": 1
+}

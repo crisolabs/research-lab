@@ -1,0 +1,15 @@
+{
+  "modelo": "claude-haiku-5-5",
+  "proveedor": "anthropic",
+  "estado": "completo",
+  "niveles": [
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "motivo": "",
+  "observadas": 120,
+  "pendientes": 0
+}

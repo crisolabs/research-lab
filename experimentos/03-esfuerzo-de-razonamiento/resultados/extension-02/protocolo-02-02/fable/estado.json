@@ -1,0 +1,15 @@
+{
+  "modelo": "fable",
+  "proveedor": "anthropic",
+  "estado": "incompleto",
+  "niveles": [
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "motivo": "cuota",
+  "observadas": 28,
+  "pendientes": 92
+}

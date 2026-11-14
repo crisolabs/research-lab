@@ -1,0 +1,6 @@
+{
+  "proveedor": "anthropic",
+  "mensaje": "You've reached your Fable limit. Switch to another model, or manage usage credits at [URL omitida] to continue.",
+  "espera": "No se espera ni reintenta; cierre inmediato dentro del máximo autorizado.",
+  "utc": "2026-11-14T04:11:08.569667+00:00"
+}

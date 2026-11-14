@@ -1,0 +1,8 @@
+{
+  "id": "sondeo-high",
+  "nivel": "high",
+  "inicio_utc": "2026-11-14T03:03:07.225352+00:00",
+  "inicio_monotonic_ns": 2302316416568084,
+  "orden_real_inicio": 3,
+  "concurrencia_al_inicio": 1
+}

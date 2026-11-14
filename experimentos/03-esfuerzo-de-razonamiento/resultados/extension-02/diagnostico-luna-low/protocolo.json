@@ -1,0 +1,9 @@
+{
+  "semilla": 2026111304,
+  "modelo": "gpt-6-luna",
+  "nivel": "low",
+  "timeout_segundos": 600,
+  "max_paralelo": 1,
+  "incluido_matriz": false,
+  "codigo_sha256": "145454398713b60d396a881a8695d2c7ae13eadaab84e7bf3a49e2e0ba980f06"
+}

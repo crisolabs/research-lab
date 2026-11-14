@@ -1,0 +1,76 @@
+{
+  "generador": "resumir0202.py",
+  "generador_sha256": "4a6bc1b730293102d2ec286eb4912e98c9916a370d4070261f567e1585cff978",
+  "motivo": "Resumen separado; no modifica el arnés de medición ni sus hashes registrados.",
+  "codigo_medicion_sha256": "c36992c167a595748703aac8aa3d36112aad8a1da5007e79b89e9d8a69cabbad",
+  "csv_entrada_sha256": {
+    "crudo.csv": "4ae908741b59a26a129d61fbfea6778bcd2d7e13b4130c4b60d02b7f8f3b2399",
+    "crudo-extension.csv": "f330f69ffbe19307d74d562c33874e129fd2f9a05ed94db8d45029b8fb2c088a",
+    "crudo-gpt-6-luna.csv": "28562cbcbe84354c16929c3b23591370d403ab925aee7c9417059d7bdadaaa9a",
+    "crudo-claude-haiku-5-5-02-02.csv": "9e555b8308f747c617ef39ea35b132a6324105dc49a31a01af2b3057353a16ca",
+    "crudo-claude-opus-5-5-02-02.csv": "ba4cad9c20468fbd5c6acb38bd6d7bef0b39586b30a5bd8b34438a59aff8453a",
+    "crudo-fable-02-02.csv": "1e0be515ba7507e27645c9601362654f129d98a07af93e4b2472009aad1ffd15"
+  },
+  "conteos": {
+    "observadas_principales": 388,
+    "evaluables": 387,
+    "resueltas_evaluables": 367,
+    "fallos_funcionales": 20,
+    "infraestructura": 0,
+    "cuota": 1,
+    "timeouts": 8,
+    "pilotos_excluidos": 4,
+    "sondeos_excluidos": 20
+  },
+  "razones_sobre_medianas_crudas": {
+    "gpt-6.1-sol": {
+      "segundos_bajo": "41.0885",
+      "segundos_alto": "102.009",
+      "razon_tiempo": "2.482665466006303466906798739",
+      "tokens_bajo": "95548.5",
+      "tokens_alto": "132109.5",
+      "razon_tokens": "1.382643369597638895430069546",
+      "n_segundos_bajo": 24,
+      "n_segundos_alto": 24,
+      "n_tokens_bajo": 24,
+      "n_tokens_alto": 24
+    },
+    "gpt-6-luna": {
+      "segundos_bajo": "38.928",
+      "segundos_alto": "96.8235",
+      "razon_tiempo": "2.487245684340320591861898890",
+      "tokens_bajo": "124518.5",
+      "tokens_alto": "148684",
+      "razon_tokens": "1.194071563663230764906419528",
+      "n_segundos_bajo": 24,
+      "n_segundos_alto": 24,
+      "n_tokens_bajo": 24,
+      "n_tokens_alto": 24
+    },
+    "claude-haiku-5-5": {
+      "segundos_bajo": "18.553",
+      "segundos_alto": "166.0735",
+      "razon_tiempo": "8.951301676278768932248153937",
+      "tokens_bajo": "47353",
+      "tokens_alto": "195129.5",
+      "razon_tokens": "4.120742086034675733322070407",
+      "n_segundos_bajo": 24,
+      "n_segundos_alto": 24,
+      "n_tokens_bajo": 24,
+      "n_tokens_alto": 24
+    },
+    "claude-opus-5-5": {
+      "segundos_bajo": "20.8385",
+      "segundos_alto": "376.1565",
+      "razon_tiempo": "18.05103534323487775031792116",
+      "tokens_bajo": "37178.5",
+      "tokens_alto": "260660",
+      "razon_tokens": "7.011041327649044474629153947",
+      "n_segundos_bajo": 24,
+      "n_segundos_alto": 24,
+      "n_tokens_bajo": 24,
+      "n_tokens_alto": 21
+    }
+  },
+  "controles_sol_excluidos": 8
+}

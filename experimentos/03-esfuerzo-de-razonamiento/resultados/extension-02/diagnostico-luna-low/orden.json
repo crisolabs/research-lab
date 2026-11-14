@@ -1,0 +1,56 @@
+[
+  {
+    "id": "diagnostico-01-lotes-low-1",
+    "fase": "diagnostico",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "repeticion": 1,
+    "nivel": "low",
+    "orden": 1
+  },
+  {
+    "id": "diagnostico-08-cache-low-2",
+    "fase": "diagnostico",
+    "tarea": "08-cache",
+    "tipo": "diseño",
+    "repeticion": 2,
+    "nivel": "low",
+    "orden": 2
+  },
+  {
+    "id": "diagnostico-08-cache-low-1",
+    "fase": "diagnostico",
+    "tarea": "08-cache",
+    "tipo": "diseño",
+    "repeticion": 1,
+    "nivel": "low",
+    "orden": 3
+  },
+  {
+    "id": "diagnostico-04-espera-low-1",
+    "fase": "diagnostico",
+    "tarea": "04-espera",
+    "tipo": "acotada",
+    "repeticion": 1,
+    "nivel": "low",
+    "orden": 4
+  },
+  {
+    "id": "diagnostico-01-lotes-low-2",
+    "fase": "diagnostico",
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "repeticion": 2,
+    "nivel": "low",
+    "orden": 5
+  },
+  {
+    "id": "diagnostico-04-espera-low-2",
+    "fase": "diagnostico",
+    "tarea": "04-espera",
+    "tipo": "acotada",
+    "repeticion": 2,
+    "nivel": "low",
+    "orden": 6
+  }
+]

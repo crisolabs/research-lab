@@ -1,0 +1,39 @@
+{
+  "banco_archivos_intactos": 34,
+  "historicos_intactos": 584,
+  "candidato_medicion_intacto": "863dfe5",
+  "enmienda_commit_solo": "0ad8fcd",
+  "bloques": {
+    "claude-haiku-5-5": {
+      "observadas": 120,
+      "evaluables": 120,
+      "resueltas": 119,
+      "cuota": 0,
+      "timeouts": 0,
+      "pendientes": 0
+    },
+    "claude-opus-5-5": {
+      "observadas": 120,
+      "evaluables": 120,
+      "resueltas": 117,
+      "cuota": 0,
+      "timeouts": 3,
+      "pendientes": 0
+    },
+    "fable": {
+      "observadas": 28,
+      "evaluables": 27,
+      "resueltas": 22,
+      "cuota": 1,
+      "timeouts": 5,
+      "pendientes": 92
+    }
+  },
+  "max_concurrencia_reconstruida": 2,
+  "diagnosticos_separados": 6,
+  "diagnosticos_resueltos": 2,
+  "nota_lineas": 10,
+  "prefijo_resumen_intacto": true,
+  "readme_raiz_solo_fila03": true,
+  "llamadas_proveedores_en_verificador": 0
+}

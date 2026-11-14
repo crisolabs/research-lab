@@ -1,0 +1,11 @@
+[
+  {
+    "id": "piloto-01-lotes-low-1",
+    "fase": "piloto",
+    "orden": 1,
+    "tarea": "01-lotes",
+    "tipo": "acotada",
+    "repeticion": 1,
+    "nivel": "low"
+  }
+]

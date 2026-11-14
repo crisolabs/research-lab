@@ -1,0 +1,15 @@
+{
+  "modelo": "fable",
+  "proveedor": "anthropic",
+  "estado": "incompleto",
+  "niveles": [
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "motivo": "infraestructura",
+  "observadas": 1,
+  "pendientes": 92
+}

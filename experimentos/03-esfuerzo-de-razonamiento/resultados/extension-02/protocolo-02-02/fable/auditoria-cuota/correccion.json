@@ -1,0 +1,27 @@
+{
+  "regla": "Cuota explícita excluida del denominador y cierre del proveedor, según EXTENSION-02.md.",
+  "motivo": "El parser no reconocía la frase reached your Fable limit y clasificó infraestructura; ese estado igualmente detuvo el lanzamiento al cerrar la tanda.",
+  "campos_cambiados": {
+    "estado": [
+      "infraestructura",
+      "cuota"
+    ],
+    "cuota": [
+      0,
+      1
+    ],
+    "error": [
+      "infraestructura",
+      "cuota"
+    ]
+  },
+  "sin_cambios": "Tiempos, tokens, tests, resolución ausente, recibo y candidato de medición.",
+  "original_sha256": "9e1146e8381c17f71537d0c0e21c946b84e412bff0e5d697373c731bea9f08b5",
+  "csv_original_sha256": "907e036d575b4e9cd0fc1ab3eabb67fe3787a8bb952535f7cee273dedba4b709",
+  "recibo_intacto_sha256": "013edfaa9a0a2bad1042d957a336e67b8631fe22faa81bdff0edc3f3032c6845",
+  "observacion_derivada_sha256": "f9be6d28ec400f693e921a455c77e5565144f772faac1fc8074406a0ce271b65",
+  "candidato_medicion_sha256": "c36992c167a595748703aac8aa3d36112aad8a1da5007e79b89e9d8a69cabbad",
+  "observadas": 28,
+  "pendientes": 92,
+  "sin_llamadas_posteriores_anthropic": "La última iniciada y cerrada es la observación auditada; no se hizo comprobación, espera ni cambio de modelo/cuenta."
+}

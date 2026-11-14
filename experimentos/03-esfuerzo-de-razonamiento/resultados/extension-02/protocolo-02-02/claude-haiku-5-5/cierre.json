@@ -1,0 +1,47 @@
+{
+  "observadas": 120,
+  "resueltas": 119,
+  "fallos": 1,
+  "denegaciones": 1,
+  "corridas_con_denegaciones": 1,
+  "cuota": 0,
+  "niveles": {
+    "low": {
+      "observadas": 24,
+      "resueltas": 24,
+      "segundos_mediana": 18.552999999999997,
+      "tokens_mediana": 47353.0
+    },
+    "medium": {
+      "observadas": 24,
+      "resueltas": 23,
+      "segundos_mediana": 23.3235,
+      "tokens_mediana": 56000.5
+    },
+    "high": {
+      "observadas": 24,
+      "resueltas": 24,
+      "segundos_mediana": 32.6355,
+      "tokens_mediana": 61617.0
+    },
+    "xhigh": {
+      "observadas": 24,
+      "resueltas": 24,
+      "segundos_mediana": 57.091,
+      "tokens_mediana": 87451.5
+    },
+    "max": {
+      "observadas": 24,
+      "resueltas": 24,
+      "segundos_mediana": 166.0735,
+      "tokens_mediana": 195129.5
+    }
+  },
+  "fallos_detalle": [
+    {
+      "id": "principal-07-planificador-medium-3",
+      "tests_aprobados": "4",
+      "tests_total": "5"
+    }
+  ]
+}

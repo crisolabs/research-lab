@@ -1,0 +1,65 @@
+{
+  "observadas": 120,
+  "resueltas": 117,
+  "fallos": 3,
+  "timeouts": 3,
+  "denegaciones": 1,
+  "cuota": 0,
+  "niveles": {
+    "low": {
+      "observadas": 24,
+      "resueltas": 24,
+      "segundos_mediana": 20.8385,
+      "tokens_mediana": 37178.5,
+      "n_tokens": 24
+    },
+    "medium": {
+      "observadas": 24,
+      "resueltas": 24,
+      "segundos_mediana": 26.4715,
+      "tokens_mediana": 41283.0,
+      "n_tokens": 24
+    },
+    "high": {
+      "observadas": 24,
+      "resueltas": 24,
+      "segundos_mediana": 30.887,
+      "tokens_mediana": 42501.0,
+      "n_tokens": 24
+    },
+    "xhigh": {
+      "observadas": 24,
+      "resueltas": 24,
+      "segundos_mediana": 52.11,
+      "tokens_mediana": 53390.5,
+      "n_tokens": 24
+    },
+    "max": {
+      "observadas": 24,
+      "resueltas": 21,
+      "segundos_mediana": 376.1565,
+      "tokens_mediana": 260660,
+      "n_tokens": 21
+    }
+  },
+  "fallos_detalle": [
+    {
+      "id": "principal-07-planificador-max-3",
+      "tests_aprobados": "5",
+      "tests_total": "5",
+      "error": "timeout_agente"
+    },
+    {
+      "id": "principal-02-intervalos-max-2",
+      "tests_aprobados": "3",
+      "tests_total": "3",
+      "error": "timeout_agente"
+    },
+    {
+      "id": "principal-07-planificador-max-1",
+      "tests_aprobados": "5",
+      "tests_total": "5",
+      "error": "timeout_agente"
+    }
+  ]
+}

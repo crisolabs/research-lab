@@ -1,0 +1,14 @@
+{
+  "tipos_eventos": [],
+  "uso": {},
+  "uso_por_modelo": {},
+  "subtipo": "",
+  "es_error": false,
+  "permisos_denegados": {
+    "cantidad": 0,
+    "herramientas": []
+  },
+  "modelo_principal_declarado": "",
+  "criterio_modelo_efectivo": "Mayor outputTokens en modelUsage; empate sin identidad principal.",
+  "modelos_auxiliares": []
+}

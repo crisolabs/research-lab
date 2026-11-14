@@ -1,0 +1,51 @@
+{
+  "tipos_eventos": [
+    "result"
+  ],
+  "uso": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 17097,
+    "cache_read_input_tokens": 75504,
+    "output_tokens": 16818,
+    "output_tokens_details": {
+      "thinking_tokens": 11918
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 17097,
+      "ephemeral_5m_input_tokens": 0
+    }
+  },
+  "uso_por_modelo": {
+    "claude-haiku-5-5": {
+      "inputTokens": 12,
+      "outputTokens": 16818,
+      "cacheReadInputTokens": 75504,
+      "cacheCreationInputTokens": 17097,
+      "webSearchRequests": 0,
+      "costUSD": 0.01258464,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 11918,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 17097
+    }
+  },
+  "duration_ms": 70259,
+  "duration_api_ms": 69402,
+  "num_turns": 6,
+  "subtipo": "success",
+  "es_error": false,
+  "permisos_denegados": {
+    "cantidad": 0,
+    "herramientas": []
+  },
+  "modelo_principal_declarado": "",
+  "criterio_modelo_efectivo": "Mayor outputTokens en modelUsage; empate sin identidad principal.",
+  "modelos_auxiliares": [],
+  "modelo_solicitado": "claude-haiku-5-5",
+  "modelo_distinto_del_solicitado": false
+}

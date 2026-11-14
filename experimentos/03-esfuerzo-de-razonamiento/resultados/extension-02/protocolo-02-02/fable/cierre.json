@@ -1,0 +1,14 @@
+{
+  "observadas": 28,
+  "evaluables": 27,
+  "resueltas": 22,
+  "timeouts": 5,
+  "cuota": 1,
+  "pendientes": 92,
+  "identidades_principales_observadas": [
+    "claude-fable-5-2"
+  ],
+  "efectivo_ausente": 5,
+  "denegaciones": 0,
+  "motivo_cierre": "Cuota Fable explícita; sin espera ni comprobación posterior."
+}
