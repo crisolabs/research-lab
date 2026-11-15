@@ -1,0 +1,8 @@
+{
+  "id": "sondeo-medium",
+  "nivel": "medium",
+  "inicio_utc": "2026-11-15T14:02:58.176241+00:00",
+  "inicio_monotonic_ns": 2428307359963925,
+  "orden_real_inicio": 2,
+  "concurrencia_al_inicio": 1
+}

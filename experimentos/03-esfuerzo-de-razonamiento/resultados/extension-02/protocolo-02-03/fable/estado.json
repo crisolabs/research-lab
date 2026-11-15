@@ -1,0 +1,17 @@
+{
+  "modelo": "fable",
+  "modelo_solicitado": "claude-fable-5-2",
+  "proveedor": "anthropic",
+  "canal_auth": "api_key",
+  "estado": "completo",
+  "niveles": [
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "motivo": "",
+  "observadas": 93,
+  "pendientes": 0
+}

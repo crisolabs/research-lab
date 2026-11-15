@@ -1,0 +1,54 @@
+{
+  "claude": {
+    "argv_publico": [
+      "/opt/claude",
+      "-p",
+      "Leé TAREA.md y resolvé la tarea implementando los requisitos completos. Editá sólo el módulo permitido. Usá herramientas locales si las necesitás. No accedas a Internet ni delegues. No agregues tests ni documentación. No leas archivos de configuración o autenticación del CLI. Al terminar, describí brevemente qué cambiaste.",
+      "--model",
+      "claude-fable-5-2",
+      "--output-format",
+      "json",
+      "--restricted",
+      "--setting-sources",
+      "",
+      "--settings",
+      "{\"disableAllHooks\":true,\"autoMemoryEnabled\":false}",
+      "--strict-mcp-config",
+      "--mcp-config",
+      "{\"mcpServers\":{}}",
+      "--disable-slash-commands",
+      "--no-session-persistence",
+      "--no-chrome",
+      "--permission-mode",
+      "dontAsk",
+      "--tools",
+      "Read,Edit,Write,Glob,Grep,Bash",
+      "--allowedTools",
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "Bash",
+      "--effort",
+      "high"
+    ],
+    "montajes": [
+      "Runtime y certificados en lectura",
+      "Directorio /user/.claude vacío sin .credentials.json",
+      "Copia temporal nueva en /work con escritura"
+    ],
+    "env": [
+      "PATH",
+      "LANG",
+      "HOME",
+      "PYTHONDONTWRITEBYTECODE",
+      "PYTHONHASHSEED",
+      "ANTHROPIC_API_KEY (en memoria, nunca en argv ni archivos)"
+    ],
+    "limites": [
+      "Red del proveedor disponible",
+      "Instrucciones incorporadas del proveedor"
+    ]
+  }
+}

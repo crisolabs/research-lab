@@ -1,0 +1,16 @@
+{
+  "retorno_cli": 0,
+  "timeout": 0,
+  "segundos": 3.933,
+  "error": "",
+  "error_textual": "",
+  "modelo_efectivo": "claude-fable-5-2",
+  "advertencias": "[]",
+  "denegaciones": 0,
+  "canal_auth": "api_key",
+  "tokens_entrada": 2,
+  "tokens_cache": 1466,
+  "tokens_salida": 4,
+  "tokens_razonamiento": "",
+  "tokens_totales": 1731
+}
