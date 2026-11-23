@@ -1,0 +1,3 @@
+fe024c0e014fb1fe2cffadda7df3a3ecffa9eeb42045fdfb970408c282207fbc  docs/01-sintesis-pentamodal-elite.md
+796cb8c8f73e3c4261ca2ad10d3613df8a619fb93ab19c7720113cff4a2adfea  docs/02-revision-bibliografica-2024-2026.md
+48f922ec0a7b8dfb286599eb1b89078f42941444fd9581d6b099e88cf3a0d87e  docs/03-preregistro-crisol-mba-x64.md

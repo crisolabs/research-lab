@@ -50,6 +50,7 @@ Podés recorrer `git log --reverse` para ver la secuencia real en 11 pasos:
 | # | Pregunta | Papers | Divulgación | Datos y código |
 |---|---|---|---|---|
 | 03 | ¿Más esfuerzo de razonamiento hace que un agente programe mejor? (`600` corridas en `5` modelos) | [EN PDF](experimentos/03-esfuerzo-de-razonamiento/paper/paper-en.pdf) · [ES PDF](experimentos/03-esfuerzo-de-razonamiento/paper/paper-es.pdf) | [PDF público](blog/2026-11-esfuerzo-de-razonamiento.pdf) · [Blog MD](blog/2026-11-esfuerzo-de-razonamiento.md) | [Experimento 03](experimentos/03-esfuerzo-de-razonamiento/) |
+| 04 | **CRISOL-MBA·x64:** ¿Puede un sistema neuro-simbólico certificado con **LRAT + Lean 4 `bv_decide`** desofuscar código máquina x86-64? (`V_test=160`, `V_hard=40`, `V_real=22`) | [EN PDF](experimentos/04-crisol-mba-x64/paper/paper-en.pdf) · [ES PDF](experimentos/04-crisol-mba-x64/paper/paper-es.pdf) · [arXiv LaTeX](experimentos/04-crisol-mba-x64/paper/arxiv-crisol-mba-x64-v1.tar.gz) | [Blog ES](blog/2026-11-23-crisol-mba-x64-lean4.md) · [Blog EN](blog/2026-11-23-crisol-mba-x64-lean4.md) | [Experimento 04](experimentos/04-crisol-mba-x64/) |
 
 ---
 
