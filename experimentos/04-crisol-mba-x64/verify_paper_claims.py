@@ -5,9 +5,10 @@ Deterministic Zero-LLM Pre-Publication Gate for CRISOL-MBA-x64 (`verify_paper_cl
 Portable (zero hardcoded author paths) and checks EXACT string equality (`==`) on EVERY
 count, percentage, in-flight bracket, mean/max time, LLM-call, and McNemar p-value cell of
 Tables `tab:vtest`, `tab:vhard`, and `tab:vreal`, plus full-document p-values (McNemar +
-family sign test), Abstract/Conclusion fraction & percentage sequences, all three SHA-256
-manifests (`data/manifest_V.sha256`, `data/manifest_V_real.sha256`, `docs/SHA256SUMS.txt`)
-and LRAT digests, bibliography, README consistency, and git commit existence (`--allow-no-git`
+family sign test) with whitespace/LaTeX-aware operator guards, Abstract/Conclusion fraction
+and percentage sequences, all three SHA-256 manifests (`data/manifest_V.sha256`,
+`data/manifest_V_real.sha256`, `docs/SHA256SUMS.txt`) pinned to their exact target files,
+LRAT digests, bibliography, README consistency, and git commit existence (`--allow-no-git`
 supported for `.git`-less Zenodo archive snapshots).
 """
 import argparse
@@ -25,6 +26,25 @@ REPO = Path(__file__).resolve().parent
 TEX_PATH = REPO / "paper" / "arxiv-v1" / "main.tex"
 BIB_PATH = REPO / "paper" / "arxiv-v1" / "references.bib"
 README_PATH = REPO / "README.md"
+
+# Whitespace- and LaTeX-wrapper-aware arithmetic modifier guards:
+# Catches `$-$96.25\%`, `− 96.25\%`, `-\textbf{96.25\%}`, `p = 0.078 / 10`, `$p = 0.078$ / 10`, etc.
+_MODIFIER_LEFT_RE = re.compile(
+    r"(?:(?<!-)--(?!-)|(?<!-)-(?!-)|[+−/*^]|\\(?:pm|mp|minus|times|cdot|div|frac))\s*"
+    r"(?:\\,|~|\$|\{|\}|\\textbf\{|\\emph\{|\\texttt\{|\s)*$"
+)
+_MODIFIER_RIGHT_RE = re.compile(
+    r"^(?:\\,|~|\$|\{|\}|\s)*(?:(?<!-)--(?!-)|(?<!-)-(?!-)|[+−/*^]|\\(?:pm|mp|minus|times|cdot|div)\b|\d)"
+)
+
+
+def _assert_clean_numeric_context(text: str, start: int, end: int, label: str) -> None:
+    left = text[max(0, start - 32):start]
+    right = text[end:min(len(text), end + 32)]
+    if _MODIFIER_LEFT_RE.search(left):
+        fail(f"{label} has unexpected arithmetic sign/operator prefix in `{left}{text[start:end]}`")
+    if _MODIFIER_RIGHT_RE.search(right):
+        fail(f"{label} has unexpected arithmetic operator/digit suffix in `{text[start:end]}{right}`")
 
 
 def _resolve_git_root() -> Path | None:
@@ -70,34 +90,38 @@ def fmt_sci_tex(p: float) -> str:
     return f"{mant} \\times 10^{{{int(exp)}}}"
 
 
-def verify_sha256_manifest(manifest_path: Path, base_dir: Path) -> int:
+def verify_sha256_manifest(manifest_path: Path, base_dir: Path, expected_targets: list[str]) -> int:
     if not manifest_path.exists():
         fail(f"Missing required SHA-256 manifest: {manifest_path}")
-    cnt = 0
+    seen_targets: list[str] = []
     for raw in manifest_path.read_text(encoding="utf-8").splitlines():
         line = raw.strip()
         if not line:
             continue
         parts = line.split()
-        if len(parts) != 2:
+        if len(parts) != 2 or not re.fullmatch(r"[0-9a-f]{64}", parts[0]):
             fail(f"Malformed SHA-256 line in {manifest_path}: {line}")
         exp_hash, rel = parts
-        target = base_dir / rel
-        if not target.exists():
+        seen_targets.append(rel)
+        target = (base_dir / rel).resolve()
+        try:
+            target.relative_to(REPO.resolve())
+        except ValueError:
+            fail(f"SHA-256 target escapes repository root: {target}")
+        if not target.is_file():
             fail(f"SHA-256 target missing: {target}")
         got_hash = hashlib.sha256(target.read_bytes()).hexdigest()
         if got_hash != exp_hash:
             fail(f"SHA-256 mismatch for {target}: got {got_hash} vs {exp_hash}")
-        cnt += 1
-    if cnt == 0:
-        fail(f"Empty SHA-256 manifest: {manifest_path}")
-    return cnt
+    if seen_targets != expected_targets:
+        fail(f"SHA-256 manifest target list mismatch in {manifest_path}: got {seen_targets} vs {expected_targets}")
+    return len(seen_targets)
 
 
 def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
     checks = 0
 
-    # 0. Unconditionally verify ALL THREE SHA-256 manifests and reject unverified manifest files
+    # 0. Unconditionally verify ALL THREE SHA-256 manifests pinned to their exact target files
     expected_manifests = ["data/manifest_V.sha256", "data/manifest_V_real.sha256", "docs/SHA256SUMS.txt"]
     found_manifests = sorted(
         p.relative_to(REPO).as_posix()
@@ -107,9 +131,17 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
     if found_manifests != expected_manifests:
         fail(f"SHA-256 manifest inventory mismatch: got {found_manifests} vs {expected_manifests}")
     checks += 1
-    checks += verify_sha256_manifest(REPO / "data" / "manifest_V.sha256", REPO / "data")
-    checks += verify_sha256_manifest(REPO / "data" / "manifest_V_real.sha256", REPO / "data")
-    checks += verify_sha256_manifest(REPO / "docs" / "SHA256SUMS.txt", REPO)
+    checks += verify_sha256_manifest(REPO / "data" / "manifest_V.sha256", REPO / "data", ["manifest_V.json"])
+    checks += verify_sha256_manifest(REPO / "data" / "manifest_V_real.sha256", REPO / "data", ["manifest_V_real.json"])
+    checks += verify_sha256_manifest(
+        REPO / "docs" / "SHA256SUMS.txt",
+        REPO,
+        [
+            "docs/01-sintesis-pentamodal-elite.md",
+            "docs/02-revision-bibliografica-2024-2026.md",
+            "docs/03-preregistro-crisol-mba-x64.md",
+        ],
+    )
 
     mv = json.loads((REPO / "data" / "manifest_V.json").read_text(encoding="utf-8"))
     vtest = mv["V_test"]
@@ -265,7 +297,8 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
             fail(f"tab:vreal `{prefix}` mismatch: got {cols[2:6]} vs ({exp_p} / 22, {exp_pct}, {exp_mean}, {exp_pcol})")
         checks += 4
 
-    # 4b. Full-document exact p-value verification (17 McNemar + 3 sign-test occurrences) with strict boundaries!
+    # 4b. Full-document exact p-value verification (17 McNemar + 3 sign-test occurrences)
+    # with whitespace/LaTeX-aware suffix guard (blocks `p = 0.078 / 10`, `$p = 0.078$ / 10`, `p = -0.078`, etc.)
     fams = sorted(set(fam_by_id.values()))
     fam_wins = sum(
         1 for f in fams
@@ -301,9 +334,14 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
         fmt_sci_tex(mcnemar_sets(strict_sets["D"] & le10_ids, ac_strict & le10_ids)),  # Conclusion: N=129
     ]
     total_peq = len(re.findall(r"\bp\s*=", tex))
-    got_all_pvals = re.findall(r"\bp\s*=\s*(\d+\.\d+\s*\\times\s*10\^\{-?\d+\}|\d+\.\d+)(?![-+−/*^.\d\w\\])", tex)
+    pval_matches = list(re.finditer(r"\bp\s*=\s*(\d+\.\d+\s*\\times\s*10\^\{-?\d+\}|\d+\.\d+)", tex))
+    got_all_pvals = [m.group(1) for m in pval_matches]
     if total_peq != len(exp_all_pvals) or got_all_pvals != exp_all_pvals:
-        fail(f"Document p-value sequence/boundary mismatch (total `p =`={total_peq}):\n  got={got_all_pvals}\n  exp={exp_all_pvals}")
+        fail(f"Document p-value sequence mismatch (total `p =`={total_peq}):\n  got={got_all_pvals}\n  exp={exp_all_pvals}")
+    for m in pval_matches:
+        right = tex[m.end():min(len(tex), m.end() + 32)]
+        if _MODIFIER_RIGHT_RE.search(right):
+            fail(f"Document p-value has unexpected trailing operator/digit in `{m.group(0)}{right}`")
     checks += len(exp_all_pvals)
 
     # 5. Bibliography, README (228 passes verified against JSONLs), & no stale files in REPO / paper
@@ -324,7 +362,7 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
             fail(f"Stale duplicate file `{stale}` exists in `{REPO / 'paper'}`!")
     checks += 7
 
-    # 5b. Exact token-list & sign/operator-boundary consistency in Abstract & Conclusion!
+    # 5b. Exact token-list & whitespace/LaTeX-aware context guards in Abstract & Conclusion!
     abstract = tex.split(r"\begin{abstract}")[1].split(r"\end{abstract}")[0]
     conclusion = tex.split(r"\paragraph{Conclusion.}")[1].split(r"\bibliographystyle")[0]
     exp_abs_fracs = [
@@ -347,13 +385,20 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
         ("Conclusion", conclusion, exp_conc_fracs, exp_conc_pcts),
     ]:
         raw_slash_pairs = len(re.findall(r"\d\s*/\s*\d", sec_txt))
-        got_fr = re.findall(r"(?<![-+−/*^.\d\\])\d+/\d+(?![-+−/*^.\d\w\\])", sec_txt)
+        fr_matches = list(re.finditer(r"\b\d+/\d+\b", sec_txt))
+        got_fr = [m.group(0) for m in fr_matches]
         if raw_slash_pairs != len(exp_fr) or got_fr != exp_fr:
-            fail(f"{sec_name} fraction sequence/boundary mismatch (pairs={raw_slash_pairs}): got {got_fr} vs {exp_fr}")
+            fail(f"{sec_name} fraction sequence mismatch (pairs={raw_slash_pairs}): got {got_fr} vs {exp_fr}")
+        for m in fr_matches:
+            _assert_clean_numeric_context(sec_txt, m.start(), m.end(), f"{sec_name} fraction `{m.group(0)}`")
+
         raw_pct_cnt = sec_txt.count(r"\%")
-        got_pc = [m.replace(r"\%", "%") for m in re.findall(r"(?<![-+−/*^.\d\\])\d+(?:\.\d+)?\\%(?![-+−/*^.\d\w])", sec_txt)]
+        pc_matches = list(re.finditer(r"\d+(?:\.\d+)?\\%", sec_txt))
+        got_pc = [m.group(0).replace(r"\%", "%") for m in pc_matches]
         if raw_pct_cnt != len(exp_pc) or got_pc != exp_pc:
-            fail(f"{sec_name} percentage sequence/boundary mismatch (cnt={raw_pct_cnt}): got {got_pc} vs {exp_pc}")
+            fail(f"{sec_name} percentage sequence mismatch (cnt={raw_pct_cnt}): got {got_pc} vs {exp_pc}")
+        for m in pc_matches:
+            _assert_clean_numeric_context(sec_txt, m.start(), m.end(), f"{sec_name} percentage `{m.group(0)}`")
         checks += 2
 
     # 6. Portable git commit SHA verification (`--allow-no-git` for `.git`-less Zenodo archive downloads)
