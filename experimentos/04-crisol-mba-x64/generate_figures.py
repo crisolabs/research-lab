@@ -76,14 +76,19 @@ def fig1_vtest_ablation() -> None:
 
 
 def fig2_vhard_lean4() -> None:
-    s_vh = json.loads((DATA_DIR / "summary_vhard_cert.json").read_text())["by_family"]
+    import csv
+    vh_rows = list(csv.DictReader((DATA_DIR / "results_vhard_cert.csv").open()))
     fams = ["test_mba_poly_mul_32", "test_mba_poly_mul_64"]
     labels = ["32-bit IMUL + MBA\n(n = 20)", "64-bit IMUL + MBA\n(n = 20)"]
 
-    z3_v = [100.0 * s_vh[f]["z3_unsat"] / 20 for f in fams]
-    lrat_v = [100.0 * s_vh[f]["cadical_lrat_ok"] / 20 for f in fams]
-    lean_v = [100.0 * s_vh[f]["lean4_bv_decide_ok"] / 20 for f in fams]
-    bz_v = [100.0 * s_vh[f]["bitwuzla_unsat"] / 20 for f in fams]
+    def pct_strict30(fam: str, ok_col: str, sec_col: str) -> float:
+        sub = [r for r in vh_rows if r["family"] == fam]
+        return 100.0 * sum(1 for r in sub if r[ok_col] == "True" and float(r[sec_col]) <= 30.0) / 20.0
+
+    z3_v = [pct_strict30(f, "z3_unsat", "z3_sec") for f in fams]
+    lrat_v = [pct_strict30(f, "cadical_lrat_ok", "cadical_lrat_sec") for f in fams]
+    lean_v = [pct_strict30(f, "lean4_bv_decide_ok", "lean4_bv_decide_sec") for f in fams]
+    bz_v = [pct_strict30(f, "bitwuzla_unsat", "bitwuzla_sec") for f in fams]
 
     x = np.arange(len(fams))
     w = 0.18
@@ -134,7 +139,7 @@ def fig3_real_and_tradeoff() -> None:
     for bar in bars:
         h = bar.get_height()
         ax1.annotate(f"{h:.1f}%", (bar.get_x() + bar.get_width()/2, h + 1.8), ha="center", va="bottom", fontsize=9, fontweight="bold")
-    ax1.set_ylabel("Lean 4 bv_decide Certified Pass Rate (%)")
+    ax1.set_ylabel("Certified Pass Rate (%)\n(A, C: LRAT; H: Lean 4 bv_decide)")
     ax1.set_title(f"Benchmark 3: Real gcc/clang -O2 C Corpus (N = {s_real['n_v_real']})")
     ax1.set_ylim(0, 115)
     ax1.yaxis.grid(True, linestyle="--", alpha=0.35)

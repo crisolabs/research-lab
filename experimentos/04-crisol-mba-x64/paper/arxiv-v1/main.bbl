@@ -62,14 +62,6 @@ Aina Niemetz and Mathias Preiner.
 \newblock In {\em Computer Aided Verification (CAV '23)}, volume 13965 of {\em
   LNCS}, pages 3--17. Springer, 2023.
 
-\bibitem{gmba2025}
-Youjeong Noh, Joon-Young Paik, Jingun Kwon, and Eun-Sun Cho.
-\newblock {gMBA}: Expression semantic guided mixed boolean-arithmetic
-  deobfuscation using transformer architectures.
-\newblock In {\em Findings of the Association for Computational Linguistics:
-  ACL 2025}, pages 21882--21888. ACL, 2025.
-\newblock arXiv:2506.23634.
-
 \bibitem{capstone2014}
 Nguyen~Anh Quynh.
 \newblock Capstone: Next-gen disassembly framework.
@@ -94,6 +86,14 @@ Benjamin Reichenwallner and Peter Meerwald-Stadler.
   {GAMBA}.
 \newblock In {\em 2023 IEEE European Symposium on Security and Privacy
   Workshops (EuroS\&PW / WoRMA '23)}, pages 427--438. IEEE, 2023.
+
+\bibitem{gmba2025}
+Youjeong Roh, Joon-Young Paik, Jingun Kwon, and Eun-Sun Cho.
+\newblock {gMBA}: Expression semantic guided mixed boolean-arithmetic
+  deobfuscation using transformer architectures.
+\newblock In {\em Findings of the Association for Computational Linguistics:
+  ACL 2025}, pages 21882--21888. ACL, 2025.
+\newblock arXiv:2506.23634.
 
 \bibitem{rumba2026}
 Jack Royer, Fr{\'e}d{\'e}ric Tronel, and Ya{\"e}lle Vin{\c{c}}ont.

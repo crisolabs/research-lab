@@ -18,6 +18,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from crisol_mba.expr import canonical_cost
 from crisol_mba.oracle_lean import certify_with_lean_bv_decide
 from crisol_mba.oracle_smt import SlicePreFilter, verify_candidate
 from crisol_mba.parser import parse_expr
@@ -46,11 +47,14 @@ def _replay_one(task: tuple[dict, dict, str]) -> tuple[str, str, bool, str]:
     r, d, mode = task
     code = bytes.fromhex(d["bytes_hex"])
     expr = parse_expr(r["best_expr"], expected_width=64)
+    max_cost = d["ground_truth_cost"] * 1.10
+    if canonical_cost(expr) > max_cost + 1e-9:
+        return r["config"], r["instance_id"], False, "FAIL_COST"
     if mode == "lean4":
         lv = certify_with_lean_bv_decide(code, expr, timeout_sec=30.0)
         return r["config"], r["instance_id"], lv.verified, lv.detail
     pf = SlicePreFilter(code)
-    v = verify_candidate(code, expr, max_cost=d["ground_truth_cost"] * 1.10, prefilter=pf, timeout_sec=30.0, require_lrat=True)
+    v = verify_candidate(code, expr, max_cost=max_cost, prefilter=pf, timeout_sec=30.0, require_lrat=True)
     return r["config"], r["instance_id"], (v.status == "PASS"), v.status
 
 

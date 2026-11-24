@@ -117,6 +117,8 @@ def lift_x64_to_lean_lets(code: bytes) -> tuple[list[str], str, str]:
                 if iw == 32:
                     iv = f"(BitVec.zeroExtend 64 {iv})"
                 addr = f"({addr} + ({iv} * {_bv_lit(mem.scale, 64)}))"
+            if getattr(insn, "addr_size", 8) == 4:
+                addr = f"(BitVec.zeroExtend 64 (BitVec.truncate 32 {addr}))"
             if dst_w == 64:
                 _lean_write_reg(state, dst_name, addr, let_lines, step)
             else:

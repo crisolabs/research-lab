@@ -220,6 +220,8 @@ def lift_to_z3(code: bytes, initial_vars: dict[str, z3.BitVecRef] | None = None)
                 if idx_w == 32:
                     idx_val = z3.ZeroExt(32, idx_val)
                 addr = addr + idx_val * z3.BitVecVal(mem.scale, 64)
+            if getattr(insn, "addr_size", 8) == 4:
+                addr = z3.ZeroExt(32, z3.Extract(31, 0, addr))
             if dst_w == 64:
                 _z3_write_reg(state, dst_name, addr)
             elif dst_w == 32:
@@ -450,6 +452,9 @@ def lift_to_bitwuzla(code: bytes, tm: Any, initial_vars: dict[str, Any] | None =
                     idx_val = tm.mk_term(bz.Kind.BV_ZERO_EXTEND, [idx_val], [32])
                 scaled = tm.mk_term(bz.Kind.BV_MUL, [idx_val, tm.mk_bv_value(s64, mem.scale)])
                 addr = tm.mk_term(bz.Kind.BV_ADD, [addr, scaled])
+            if getattr(insn, "addr_size", 8) == 4:
+                addr32 = tm.mk_term(bz.Kind.BV_EXTRACT, [addr], [31, 0])
+                addr = tm.mk_term(bz.Kind.BV_ZERO_EXTEND, [addr32], [32])
             if dst_w == 64:
                 _bz_write_reg(tm, state, dst_name, addr)
             elif dst_w == 32:
