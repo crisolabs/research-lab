@@ -99,10 +99,15 @@ def decode_and_validate(code: bytes) -> list[DecodedInsn]:
                     raise LiftError(f"Segment override disallowed in LEA: {insn.op_str}")
                 if op.mem.base == cs_x86.X86_REG_RIP:
                     raise LiftError(f"RIP-relative LEA disallowed: {insn.op_str}")
+                for mreg in (op.mem.base, op.mem.index):
+                    if mreg != 0:
+                        mrname = insn.reg_name(mreg).lower()
+                        if mrname not in REG_INFO or REG_INFO[mrname][0] == "rsp":
+                            raise LiftError(f"Disallowed register {mrname} in LEA: {insn.op_str}")
             elif op.type == cs_x86.X86_OP_REG:
                 rname = insn.reg_name(op.reg).lower()
-                if rname not in REG_INFO:
-                    raise LiftError(f"Unsupported register {rname} in {mnem} {insn.op_str}")
+                if rname not in REG_INFO or REG_INFO[rname][0] == "rsp":
+                    raise LiftError(f"Unsupported/disallowed register {rname} in {mnem} {insn.op_str}")
             elif op.type == cs_x86.X86_OP_IMM:
                 if mnem in {"shl", "sal", "shr", "sar", "rol", "ror"} and idx == 1:
                     pass

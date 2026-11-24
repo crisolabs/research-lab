@@ -38,3 +38,14 @@ def test_lea_addr32_dest64_wrapping():
     # Lean 4 bv_decide universal equivalence check (allow 60s under background CPU load)
     lv = certify_with_lean_bv_decide(code, expr, timeout_sec=60.0)
     assert lv.verified, lv.detail
+
+
+def test_rsp_operands_rejected():
+    import pytest
+    from crisol_mba.lifter import LiftError, decode_and_validate
+    # 48 89 e0 -> mov rax, rsp (must be rejected by decode_and_validate)
+    with pytest.raises(LiftError):
+        decode_and_validate(bytes.fromhex("4889e0"))
+    # 48 8d 04 24 -> lea rax, [rsp] (must be rejected by decode_and_validate)
+    with pytest.raises(LiftError):
+        decode_and_validate(bytes.fromhex("488d0424"))

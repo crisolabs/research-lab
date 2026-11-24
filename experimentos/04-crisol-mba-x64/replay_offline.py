@@ -75,14 +75,15 @@ def main() -> None:
     by_id_real = {d["instance_id"]: d for d in frozen_real["instances"]}
 
     h_rows = [json.loads(l) for l in (DATA_DIR / "results_test_H_hydrogen.jsonl").read_text().splitlines() if l.strip() and json.loads(l)["passed"]]
-    real_rows = [json.loads(l) for l in (DATA_DIR / "results_real_o2.jsonl").read_text().splitlines() if l.strip() and json.loads(l)["passed"] and json.loads(l)["config"] == "H_hydrogen"]
+    hs_rows = [json.loads(l) for l in (DATA_DIR / "results_test_H_sol40.jsonl").read_text().splitlines() if l.strip() and json.loads(l)["passed"]]
+    real_rows = [json.loads(l) for l in (DATA_DIR / "results_real_o2.jsonl").read_text().splitlines() if l.strip() and json.loads(l)["passed"] and json.loads(l)["config"] in ("H_hydrogen", "H_sol")]
 
     if args.mode == "smoke":
         tasks = [(r, by_id_v[r["instance_id"]], "lrat") for r in h_rows[:6]] + [
             (r, by_id_real[r["instance_id"]], "lean4") for r in real_rows[:6]
         ]
     else:
-        tasks = [(r, by_id_v[r["instance_id"]], "lrat") for r in h_rows] + [
+        tasks = [(r, by_id_v[r["instance_id"]], "lrat") for r in h_rows + hs_rows] + [
             (r, by_id_real[r["instance_id"]], "lean4") for r in real_rows
         ]
 

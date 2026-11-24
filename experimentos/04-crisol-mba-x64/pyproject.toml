@@ -20,6 +20,9 @@ dependencies = [
     "z3-solver>=4.13.0",
 ]
 
+[tool.setuptools.packages.find]
+include = ["crisol_mba*"]
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
