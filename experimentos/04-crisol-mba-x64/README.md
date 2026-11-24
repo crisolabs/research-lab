@@ -39,7 +39,7 @@ Verify every cell of Tables 2–4, strict wall-clock cutoffs, subset counts, and
 
 ## 3. Offline Certificate Replay & Figure Regeneration (Zero LLM API Keys)
 
-Re-verifies cached `Hybrid H` outputs (`--mode smoke`: 12 slices in ~30 s; `--mode full`: all 182 archived `H` passes across `V_test` and `V_real`, checking canonical cost, LRAT, and Lean 4 `bv_decide`) and regenerates `paper/fig1..fig3`:
+Re-verifies cached `Hybrid H` outputs (`--mode smoke`: 12 slices in ~30 s; `--mode full`: all 228 archived `H` passes — 182 `H`-Hydrogen + 46 `H`-Sol — across `V_test` and `V_real`, checking canonical cost, LRAT, and Lean 4 `bv_decide`) and regenerates `paper/fig1..fig3`:
 
 ```bash
 .venv/bin/python replay_offline.py --mode smoke

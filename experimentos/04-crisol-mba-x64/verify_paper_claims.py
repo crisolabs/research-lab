@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-Deterministic Zero-LLM Pre-Publication Gate for CRISOL-MBA-x64 (`verify_paper_claims.py` v5).
+Deterministic Zero-LLM Pre-Publication Gate for CRISOL-MBA-x64 (`verify_paper_claims.py` v6).
 
-Parses EVERY cell of Tables `tab:vtest`, `tab:vhard`, and `tab:vreal` — INCLUDING
-Mean / Max time columns, percentages, and LLM call counts — plus subset p-values,
-bibliography, and absence of stale duplicate files in the public repository.
+Portable (zero hardcoded author paths) and checks EXACT string equality (`==`) on EVERY
+count, percentage, in-flight bracket, mean/max time, and LLM-call cell of Tables
+`tab:vtest`, `tab:vhard`, and `tab:vreal`, plus subset p-values, bibliography, README
+consistency, and git commit existence.
 """
 import csv
 import json
@@ -16,7 +17,14 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent
 TEX_PATH = REPO / "paper" / "arxiv-v1" / "main.tex"
 BIB_PATH = REPO / "paper" / "arxiv-v1" / "references.bib"
-PUBLIC_REPO = Path("/home/luis/personal/research-lab")
+README_PATH = REPO / "README.md"
+
+
+def _resolve_git_root() -> Path:
+    r = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--show-toplevel"], capture_output=True, text=True)
+    if r.returncode == 0 and r.stdout.strip():
+        return Path(r.stdout.strip())
+    return REPO
 
 
 def fail(msg: str) -> None:
@@ -28,7 +36,7 @@ def strip_tex(s: str) -> str:
     s = re.sub(r"\\textbf\{([^}]*)\}", r"\1", s)
     s = re.sub(r"\\texttt\{([^}]*)\}", r"\1", s)
     s = re.sub(r"\\emph\{([^}]*)\}", r"\1", s)
-    return s.replace("\\\\", "").replace(r"\,", " ").strip()
+    return s.replace("\\\\", "").replace(r"\,", " ").replace(r"\%", "%").strip()
 
 
 def check_tex_text(tex: str) -> int:
@@ -106,13 +114,13 @@ def check_tex_text(tex: str) -> int:
         fail("N=120 McNemar p-value rounding must be 2.58 x 10^-26 (2^-85)!")
     checks += 3
 
-    # 3. Table tab:vhard EVERY ROW & EVERY COLUMN INCLUDING MEAN TIMES!
+    # 3. Table tab:vhard EXACT CELL EQUALITY (`==`) including ALL 12 percentages & denominators!
     vh_rows = list(csv.DictReader((REPO / "data" / "results_vhard_cert.csv").open()))
     tab_vhard = tex.split(r"\label{tab:vhard}")[0].split(r"\begin{table}")[-1]
-    for prefix, sub, denom in [
-        (r"\texttt{test\_mba\_poly\_mul\_32}", [r for r in vh_rows if "32" in r["family"]], 20),
-        (r"\texttt{test\_mba\_poly\_mul\_64}", [r for r in vh_rows if "64" in r["family"]], 20),
-        (r"\textbf{Total $V_{\mathrm{hard}}$ ($N=40$)}", vh_rows, 40),
+    for prefix, sub, denom, pct_fmt in [
+        (r"\texttt{test\_mba\_poly\_mul\_32}", [r for r in vh_rows if "32" in r["family"]], 20, ".0f"),
+        (r"\texttt{test\_mba\_poly\_mul\_64}", [r for r in vh_rows if "64" in r["family"]], 20, ".0f"),
+        (r"\textbf{Total $V_{\mathrm{hard}}$ ($N=40$)}", vh_rows, 40, "total"),
     ]:
         matched = [ln for ln in tab_vhard.splitlines() if ln.strip().startswith(prefix)]
         if len(matched) != 1:
@@ -123,23 +131,29 @@ def check_tex_text(tex: str) -> int:
         lr_i = sum(1 for r in sub if r["cadical_lrat_ok"] == "True")
         bz_s = sum(1 for r in sub if r["bitwuzla_unsat"] == "True" and float(r["bitwuzla_sec"]) <= 30.0)
         ln_s = sum(1 for r in sub if r["lean4_bv_decide_ok"] == "True" and float(r["lean4_bv_decide_sec"]) <= 30.0)
+
+        def fmt_pct(cnt: int) -> str:
+            v = 100.0 * cnt / denom
+            if pct_fmt == ".0f" or v in (0.0, 100.0):
+                return f"{v:.0f}%"
+            return f"{v:.1f}%"
+
+        exp_z3 = f"{z3_s} / {denom} ({fmt_pct(z3_s)})"
+        exp_lr = f"{lr_s} / {denom} ({fmt_pct(lr_s)}) [{lr_i}/{denom}]"
+        exp_bz = f"{bz_s} / {denom} ({fmt_pct(bz_s)})"
+        exp_ln = f"{ln_s} / {denom} ({fmt_pct(ln_s)})"
+
         m_all = sum(float(r["lean4_bv_decide_sec"]) for r in sub) / len(sub)
         ok_t = [float(r["lean4_bv_decide_sec"]) for r in sub if r["lean4_bv_decide_ok"] == "True" and float(r["lean4_bv_decide_sec"]) <= 30.0]
         m_ok = sum(ok_t) / len(ok_t)
         exp_tcol = f"{m_all:.2f} s / {m_ok:.2f} s"
-        if not cols[1].startswith(f"{z3_s} / {denom}"):
-            fail(f"tab:vhard `{prefix}` Z3 mismatch")
-        if not (cols[2].startswith(f"{lr_s} / {denom}") and f"[{lr_i}/{denom}]" in cols[2]):
-            fail(f"tab:vhard `{prefix}` LRAT mismatch")
-        if not cols[3].startswith(f"{bz_s} / {denom}"):
-            fail(f"tab:vhard `{prefix}` Bitwuzla mismatch")
-        if not cols[4].startswith(f"{ln_s} / {denom}"):
-            fail(f"tab:vhard `{prefix}` Lean4 mismatch")
-        if cols[5] != exp_tcol:
-            fail(f"tab:vhard `{prefix}` time mismatch: got `{cols[5]}` vs `{exp_tcol}`")
+
+        for cname, got, exp in [("Z3", cols[1], exp_z3), ("LRAT", cols[2], exp_lr), ("Bitwuzla", cols[3], exp_bz), ("Lean4", cols[4], exp_ln), ("Time", cols[5], exp_tcol)]:
+            if got != exp:
+                fail(f"tab:vhard `{prefix}` {cname} exact mismatch: got `{got}` vs `{exp}`")
         checks += 5
 
-    # 4. Table tab:vreal cell-by-cell INCLUDING MEAN TIMES!
+    # 4. Table tab:vreal exact equality
     vr_rows = [json.loads(l) for l in (REPO / "data" / "results_real_o2.jsonl").open() if l.strip()]
     tab_vreal = tex.split(r"\label{tab:vreal}")[0].split(r"\begin{table}")[-1]
     for prefix, cfg_name, star in [("$A$", "A", ""), ("$C$", "C", "*"), (r"\texttt{H-sol}", "H_sol", ""), (r"\textbf{\texttt{H-hydrogen}}", "H_hydrogen", "")]:
@@ -155,25 +169,28 @@ def check_tex_text(tex: str) -> int:
             fail(f"tab:vreal `{prefix}` mismatch: got {cols[2:5]} vs ({exp_p} / 22, {exp_pct}, {exp_mean})")
         checks += 3
 
-    # 5. Bibliography & no stale files in public repo
+    # 5. Bibliography, README (228 passes), & no stale files in REPO / paper
     bib = BIB_PATH.read_text(encoding="utf-8")
     if "Roh, Youjeong" not in bib or "Noh, Youjeong" in bib:
         fail("Bibliography gmba2025 must list `Roh, Youjeong`!")
-    pub_paper = PUBLIC_REPO / "experimentos" / "04-crisol-mba-x64" / "paper"
-    if pub_paper.exists():
-        for stale in ("paper-en.md", "paper-es.md", "paper-es.pdf", "references.bib", "style.css"):
-            if (pub_paper / stale).exists():
-                fail(f"Stale duplicate file `{stale}` still exists in `{pub_paper}`!")
-    checks += 5
+    if README_PATH.exists():
+        rd = README_PATH.read_text(encoding="utf-8")
+        if "228 archived" not in rd:
+            fail("README.md must state `228 archived` passes for `--mode full`!")
+    for stale in ("paper-en.md", "paper-es.md", "paper-es.pdf", "references.bib", "style.css"):
+        if (REPO / "paper" / stale).exists():
+            fail(f"Stale duplicate file `{stale}` exists in `{REPO / 'paper'}`!")
+    checks += 6
 
-    # 6. Public git commit SHA verification
+    # 6. Portable git commit SHA verification
+    git_root = _resolve_git_root()
     shas = re.findall(r"commit\s+\\texttt\{([0-9a-f]{7,40})\}", tex)
     if not shas:
         fail("No public commit SHA cited in main.tex!")
     for sha in shas:
-        rc = subprocess.run(["git", "-C", str(PUBLIC_REPO), "cat-file", "-e", f"{sha}^{{commit}}"], capture_output=True).returncode
+        rc = subprocess.run(["git", "-C", str(git_root), "cat-file", "-e", f"{sha}^{{commit}}"], capture_output=True).returncode
         if rc != 0:
-            fail(f"Cited commit SHA {sha} does NOT exist in public repo {PUBLIC_REPO}!")
+            fail(f"Cited commit SHA {sha} does NOT exist in git repository `{git_root}`!")
         checks += 1
 
     return checks
@@ -182,7 +199,7 @@ def check_tex_text(tex: str) -> int:
 def main() -> None:
     tex = TEX_PATH.read_text(encoding="utf-8")
     checks = check_tex_text(tex)
-    print(f"VERIFY_PAPER_CLAIMS_V5: PASS ({checks} exhaustive cell, time, pct, subset, bib & packaging checks verified)")
+    print(f"VERIFY_PAPER_CLAIMS_V6: PASS ({checks} exact-cell, pct, time, README, bib & portable-git checks verified)")
 
 
 if __name__ == "__main__":
