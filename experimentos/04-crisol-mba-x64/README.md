@@ -26,12 +26,16 @@ python3 -m venv .venv
 
 ---
 
-## 2. Deterministic Paper & Checksum Verification (Python Stdlib Only — Zero External Solvers)
+## 2. Deterministic Paper & Checksum Verification (Python Stdlib + Git; Zero External Solvers)
 
-Verify every cell of Tables 2–4, strict wall-clock cutoffs, subset counts, full-document McNemar $p$-values, and SHA-256 manifests directly against raw `.jsonl`/`.csv` logs:
+Verify every cell of Tables 2–4, strict wall-clock cutoffs, subset counts, all 20 document $p$-values (17 McNemar + 3 family sign-test values), and all three SHA-256 manifests (`data/manifest_V.sha256`, `data/manifest_V_real.sha256`, `docs/SHA256SUMS.txt`) directly against raw `.jsonl`/`.csv` logs.
+
+By default, `verify_paper_claims.py` also invokes `git cat-file -e` to verify that commit `42c3d22` cited in `main.tex` exists in repository history (run inside a full Git clone of `crisolabs/research-lab`, not `--depth 1`; if running from an extracted Zenodo `.zip` snapshot without `.git` history, pass `--allow-no-git`):
 
 ```bash
 python3 verify_paper_claims.py
+# Or from an extracted Zenodo archive without .git history:
+python3 verify_paper_claims.py --allow-no-git
 ```
 
 ---

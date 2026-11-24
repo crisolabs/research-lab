@@ -4,10 +4,13 @@ Deterministic Zero-LLM Pre-Publication Gate for CRISOL-MBA-x64 (`verify_paper_cl
 
 Portable (zero hardcoded author paths) and checks EXACT string equality (`==`) on EVERY
 count, percentage, in-flight bracket, mean/max time, LLM-call, and McNemar p-value cell of
-Tables `tab:vtest`, `tab:vhard`, and `tab:vreal`, plus full-document McNemar p-values,
-Abstract/Conclusion fraction & percentage sequences, SHA-256 manifests & LRAT digests,
-bibliography, README consistency, and git commit existence.
+Tables `tab:vtest`, `tab:vhard`, and `tab:vreal`, plus full-document p-values (McNemar +
+family sign test), Abstract/Conclusion fraction & percentage sequences, all three SHA-256
+manifests (`data/manifest_V.sha256`, `data/manifest_V_real.sha256`, `docs/SHA256SUMS.txt`)
+and LRAT digests, bibliography, README consistency, and git commit existence (`--allow-no-git`
+supported for `.git`-less Zenodo archive snapshots).
 """
+import argparse
 import csv
 from decimal import Decimal, ROUND_HALF_UP
 import hashlib
@@ -24,11 +27,11 @@ BIB_PATH = REPO / "paper" / "arxiv-v1" / "references.bib"
 README_PATH = REPO / "README.md"
 
 
-def _resolve_git_root() -> Path:
+def _resolve_git_root() -> Path | None:
     r = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--show-toplevel"], capture_output=True, text=True)
     if r.returncode == 0 and r.stdout.strip():
         return Path(r.stdout.strip())
-    return REPO
+    return None
 
 
 def fail(msg: str) -> None:
@@ -69,7 +72,7 @@ def fmt_sci_tex(p: float) -> str:
 
 def verify_sha256_manifest(manifest_path: Path, base_dir: Path) -> int:
     if not manifest_path.exists():
-        fail(f"Missing SHA-256 manifest: {manifest_path}")
+        fail(f"Missing required SHA-256 manifest: {manifest_path}")
     cnt = 0
     for raw in manifest_path.read_text(encoding="utf-8").splitlines():
         line = raw.strip()
@@ -86,16 +89,27 @@ def verify_sha256_manifest(manifest_path: Path, base_dir: Path) -> int:
         if got_hash != exp_hash:
             fail(f"SHA-256 mismatch for {target}: got {got_hash} vs {exp_hash}")
         cnt += 1
+    if cnt == 0:
+        fail(f"Empty SHA-256 manifest: {manifest_path}")
     return cnt
 
 
-def check_tex_text(tex: str) -> int:
+def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
     checks = 0
 
-    # 0. Verify SHA-256 manifests (`data/manifest_V.sha256` & `docs/SHA256SUMS.txt`)
+    # 0. Unconditionally verify ALL THREE SHA-256 manifests and reject unverified manifest files
+    expected_manifests = ["data/manifest_V.sha256", "data/manifest_V_real.sha256", "docs/SHA256SUMS.txt"]
+    found_manifests = sorted(
+        p.relative_to(REPO).as_posix()
+        for p in REPO.rglob("*")
+        if p.is_file() and ".git" not in p.parts and (p.suffix == ".sha256" or p.name.startswith("SHA256SUMS"))
+    )
+    if found_manifests != expected_manifests:
+        fail(f"SHA-256 manifest inventory mismatch: got {found_manifests} vs {expected_manifests}")
+    checks += 1
     checks += verify_sha256_manifest(REPO / "data" / "manifest_V.sha256", REPO / "data")
-    if (REPO / "docs" / "SHA256SUMS.txt").exists():
-        checks += verify_sha256_manifest(REPO / "docs" / "SHA256SUMS.txt", REPO)
+    checks += verify_sha256_manifest(REPO / "data" / "manifest_V_real.sha256", REPO / "data")
+    checks += verify_sha256_manifest(REPO / "docs" / "SHA256SUMS.txt", REPO)
 
     mv = json.loads((REPO / "data" / "manifest_V.json").read_text(encoding="utf-8"))
     vtest = mv["V_test"]
@@ -251,7 +265,7 @@ def check_tex_text(tex: str) -> int:
             fail(f"tab:vreal `{prefix}` mismatch: got {cols[2:6]} vs ({exp_p} / 22, {exp_pct}, {exp_mean}, {exp_pcol})")
         checks += 4
 
-    # 4b. Full-document exact McNemar / sign-test `p = ...` verification from raw data!
+    # 4b. Full-document exact p-value verification (17 McNemar + 3 sign-test occurrences) with strict boundaries!
     fams = sorted(set(fam_by_id.values()))
     fam_wins = sum(
         1 for f in fams
@@ -286,9 +300,10 @@ def check_tex_text(tex: str) -> int:
         fmt_sci_tex(mcnemar_sets(strict_sets["D"], ac_strict)),                  # Conclusion: D vs A|C strict
         fmt_sci_tex(mcnemar_sets(strict_sets["D"] & le10_ids, ac_strict & le10_ids)),  # Conclusion: N=129
     ]
-    got_all_pvals = re.findall(r"p\s*=\s*(\d+\.\d+\s*\\times\s*10\^\{-?\d+\}|\d+\.\d+)", tex)
-    if got_all_pvals != exp_all_pvals:
-        fail(f"Document p-value sequence mismatch:\n  got={got_all_pvals}\n  exp={exp_all_pvals}")
+    total_peq = len(re.findall(r"\bp\s*=", tex))
+    got_all_pvals = re.findall(r"\bp\s*=\s*(\d+\.\d+\s*\\times\s*10\^\{-?\d+\}|\d+\.\d+)(?![-+−/*^.\d\w\\])", tex)
+    if total_peq != len(exp_all_pvals) or got_all_pvals != exp_all_pvals:
+        fail(f"Document p-value sequence/boundary mismatch (total `p =`={total_peq}):\n  got={got_all_pvals}\n  exp={exp_all_pvals}")
     checks += len(exp_all_pvals)
 
     # 5. Bibliography, README (228 passes verified against JSONLs), & no stale files in REPO / paper
@@ -309,7 +324,7 @@ def check_tex_text(tex: str) -> int:
             fail(f"Stale duplicate file `{stale}` exists in `{REPO / 'paper'}`!")
     checks += 7
 
-    # 5b. Exact token-list consistency in Abstract & Conclusion (catches ANY digit mutation in fractions/percentages!)
+    # 5b. Exact token-list & sign/operator-boundary consistency in Abstract & Conclusion!
     abstract = tex.split(r"\begin{abstract}")[1].split(r"\end{abstract}")[0]
     conclusion = tex.split(r"\paragraph{Conclusion.}")[1].split(r"\bibliographystyle")[0]
     exp_abs_fracs = [
@@ -324,41 +339,60 @@ def check_tex_text(tex: str) -> int:
         "0.0%", "5.0%", "7.5%", "87.5%", "100%", "75%",
         "0.0%", "100.0%", "95%", "84.6%", "100%", "27.27%",
     ]
-    got_abs_fracs = re.findall(r"\b\d+/\d+\b", abstract)
-    got_abs_pcts = [m.replace(r"\%", "%") for m in re.findall(r"\d+(?:\.\d+)?\\%", abstract)]
-    if got_abs_fracs != exp_abs_fracs:
-        fail(f"Abstract fraction sequence mismatch: got {got_abs_fracs} vs {exp_abs_fracs}")
-    if got_abs_pcts != exp_abs_pcts:
-        fail(f"Abstract percentage sequence mismatch: got {got_abs_pcts} vs {exp_abs_pcts}")
-
     exp_conc_fracs = ["159/160", "160/160", "22/22", "2/40", "3/40", "35/40"]
     exp_conc_pcts = ["99.38%", "95%", "96.6%", "100%", "95%", "84.6%", "100%", "5.0%", "87.5%"]
-    got_conc_fracs = re.findall(r"\b\d+/\d+\b", conclusion)
-    got_conc_pcts = [m.replace(r"\%", "%") for m in re.findall(r"\d+(?:\.\d+)?\\%", conclusion)]
-    if got_conc_fracs != exp_conc_fracs:
-        fail(f"Conclusion fraction sequence mismatch: got {got_conc_fracs} vs {exp_conc_fracs}")
-    if got_conc_pcts != exp_conc_pcts:
-        fail(f"Conclusion percentage sequence mismatch: got {got_conc_pcts} vs {exp_conc_pcts}")
-    checks += 4
 
-    # 6. Portable git commit SHA verification
-    git_root = _resolve_git_root()
+    for sec_name, sec_txt, exp_fr, exp_pc in [
+        ("Abstract", abstract, exp_abs_fracs, exp_abs_pcts),
+        ("Conclusion", conclusion, exp_conc_fracs, exp_conc_pcts),
+    ]:
+        raw_slash_pairs = len(re.findall(r"\d\s*/\s*\d", sec_txt))
+        got_fr = re.findall(r"(?<![-+−/*^.\d\\])\d+/\d+(?![-+−/*^.\d\w\\])", sec_txt)
+        if raw_slash_pairs != len(exp_fr) or got_fr != exp_fr:
+            fail(f"{sec_name} fraction sequence/boundary mismatch (pairs={raw_slash_pairs}): got {got_fr} vs {exp_fr}")
+        raw_pct_cnt = sec_txt.count(r"\%")
+        got_pc = [m.replace(r"\%", "%") for m in re.findall(r"(?<![-+−/*^.\d\\])\d+(?:\.\d+)?\\%(?![-+−/*^.\d\w])", sec_txt)]
+        if raw_pct_cnt != len(exp_pc) or got_pc != exp_pc:
+            fail(f"{sec_name} percentage sequence/boundary mismatch (cnt={raw_pct_cnt}): got {got_pc} vs {exp_pc}")
+        checks += 2
+
+    # 6. Portable git commit SHA verification (`--allow-no-git` for `.git`-less Zenodo archive downloads)
     shas = re.findall(r"commit\s+\\texttt\{([0-9a-f]{7,40})\}", tex)
     if not shas:
         fail("No public commit SHA cited in main.tex!")
-    for sha in shas:
-        rc = subprocess.run(["git", "-C", str(git_root), "cat-file", "-e", f"{sha}^{{commit}}"], capture_output=True).returncode
-        if rc != 0:
-            fail(f"Cited commit SHA {sha} does NOT exist in git repository `{git_root}`!")
-        checks += 1
+    git_root = _resolve_git_root()
+    if git_root is None:
+        if not allow_no_git:
+            fail(
+                "Not inside a Git repository with commit history; run inside a full clone of "
+                "`crisolabs/research-lab` (containing commit 42c3d22) or pass `--allow-no-git` "
+                "when verifying an extracted Zenodo snapshot without `.git`."
+            )
+    else:
+        for sha in shas:
+            rc = subprocess.run(["git", "-C", str(git_root), "cat-file", "-e", f"{sha}^{{commit}}"], capture_output=True).returncode
+            if rc != 0:
+                fail(
+                    f"Cited commit SHA {sha} does NOT exist in git repository `{git_root}` "
+                    "(ensure full clone without `--depth 1`, or pass `--allow-no-git` for `.git`-less Zenodo archives)!"
+                )
+            checks += 1
 
     return checks
 
 
 def main() -> None:
+    ap = argparse.ArgumentParser(description="Deterministic Zero-LLM Pre-Publication Gate for CRISOL-MBA-x64")
+    ap.add_argument(
+        "--allow-no-git",
+        action="store_true",
+        help="Skip `git cat-file -e` check when running inside an extracted Zenodo archive without `.git` history.",
+    )
+    args = ap.parse_args()
     tex = TEX_PATH.read_text(encoding="utf-8")
-    checks = check_tex_text(tex)
-    print(f"VERIFY_PAPER_CLAIMS_V6: PASS ({checks} exact-cell, p-val, sha256, pct, time, README, bib & git checks verified)")
+    checks = check_tex_text(tex, allow_no_git=args.allow_no_git)
+    suffix = " (git history check skipped via --allow-no-git)" if args.allow_no_git and _resolve_git_root() is None else ""
+    print(f"VERIFY_PAPER_CLAIMS_V6: PASS ({checks} exact-cell, p-val, 3-sha256-manifests, pct, time, README, bib & git checks verified){suffix}")
 
 
 if __name__ == "__main__":
