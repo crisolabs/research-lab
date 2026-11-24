@@ -16,6 +16,7 @@ import concurrent.futures
 import csv
 import hashlib
 import json
+import multiprocessing
 import time
 from dataclasses import asdict
 from pathlib import Path
@@ -41,6 +42,14 @@ DATA_DIR = REPO_ROOT / "data"
 # 1. V_hard Certification Benchmark (Z3 vs Bitwuzla vs CaDiCaL-LRAT vs Lean 4 bv_decide)
 # ---------------------------------------------------------------------------
 
+_LEAN_SEM: multiprocessing.synchronize.Semaphore | None = None
+
+
+def _init_vhard_worker(sem) -> None:
+    global _LEAN_SEM
+    _LEAN_SEM = sem
+
+
 def _cert_one_vhard(d: dict) -> dict:
     code = bytes.fromhex(d["bytes_hex"])
     gt = expr_from_dict(d["ground_truth_expr"])
@@ -50,31 +59,36 @@ def _cert_one_vhard(d: dict) -> dict:
     tm = bz.TermManager()
     lb = lift_to_bitwuzla(code, tm)
     gb = to_bitwuzla(gt, tm, lb.input_vars)
+    # All 4 backends evaluated under an identical 30.0 s timeout budget
     opts = bz.Options()
-    opts.set(bz.Option.TIME_LIMIT_PER, 10000)
+    opts.set(bz.Option.TIME_LIMIT_PER, 30000)
     bs = bz.Bitwuzla(tm, opts)
     bs.assert_formula(tm.mk_term(bz.Kind.DISTINCT, [lb.regs["rax"], gb]))
     bres = str(bs.check_sat())
     bt = round(time.perf_counter() - t0, 4)
 
-    # Z3 QF_BV
+    # Z3 QF_BV (30.0 s)
     t0 = time.perf_counter()
     lz = lift_to_z3(code)
     gz = to_z3(gt, lz.input_vars)
     zs = z3.SolverFor("QF_BV")
-    zs.set("timeout", 10000)
+    zs.set("timeout", 30000)
     miter = (lz.regs["rax"] != gz)
     zs.add(miter)
     zres = str(zs.check())
     zt = round(time.perf_counter() - t0, 4)
 
-    # CaDiCaL LRAT (raw Z3 bit-blast)
+    # CaDiCaL LRAT (raw Z3 bit-blast, 30.0 s)
     t0 = time.perf_counter()
-    ok_lrat, _, lmsg = certify_unsat_lrat(miter, timeout_sec=10.0)
+    ok_lrat, _, lmsg = certify_unsat_lrat(miter, timeout_sec=30.0)
     lt = round(time.perf_counter() - t0, 4)
 
-    # Lean 4 bv_decide (Bitwuzla-style rewrite + verified bit-blast + verified LRAT kernel checker)
-    lv = certify_with_lean_bv_decide(code, gt, timeout_sec=30.0)
+    # Lean 4 bv_decide (30.0 s, max 2 concurrent Lean processes to avoid multi-thread CPU contention)
+    if _LEAN_SEM is not None:
+        with _LEAN_SEM:
+            lv = certify_with_lean_bv_decide(code, gt, timeout_sec=30.0)
+    else:
+        lv = certify_with_lean_bv_decide(code, gt, timeout_sec=30.0)
 
     return {
         "instance_id": d["instance_id"],
@@ -98,7 +112,8 @@ def cmd_vhard_cert(args: argparse.Namespace) -> None:
     v_hard = frozen["V_hard"]
     print(f"[v_hard_cert] Benchmarking 4 certification backends on {len(v_hard)} V_hard IMUL slices ({args.workers} workers)...")
     rows: list[dict] = []
-    with concurrent.futures.ProcessPoolExecutor(max_workers=args.workers) as ex:
+    lean_sem = multiprocessing.Semaphore(2)
+    with concurrent.futures.ProcessPoolExecutor(max_workers=args.workers, initializer=_init_vhard_worker, initargs=(lean_sem,)) as ex:
         futs = [ex.submit(_cert_one_vhard, d) for d in v_hard]
         for idx, fut in enumerate(concurrent.futures.as_completed(futs), 1):
             rows.append(fut.result())
