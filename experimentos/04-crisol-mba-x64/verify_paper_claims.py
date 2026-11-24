@@ -27,24 +27,35 @@ TEX_PATH = REPO / "paper" / "arxiv-v1" / "main.tex"
 BIB_PATH = REPO / "paper" / "arxiv-v1" / "references.bib"
 README_PATH = REPO / "README.md"
 
-# Whitespace- and LaTeX-wrapper-aware arithmetic modifier guards:
-# Catches `$-$96.25\%`, `− 96.25\%`, `-\textbf{96.25\%}`, `p = 0.078 / 10`, `$p = 0.078$ / 10`, etc.
-_MODIFIER_LEFT_RE = re.compile(
-    r"(?:(?<!-)--(?!-)|(?<!-)-(?!-)|[+−/*^]|\\(?:pm|mp|minus|times|cdot|div|frac))\s*"
-    r"(?:\\,|~|\$|\{|\}|\\textbf\{|\\emph\{|\\texttt\{|\s)*$"
+# Closed positive-allowlist context guards (blocks ALL prefix/suffix injections:
+# `$-$96.25\%`, `− 96.25\%`, `ehBc96.25\%`, `\frac{96.25\%}{10}`, `p = 0.078 / 10`, `p = 0.078 \frac{1}{10}`, etc.)
+_ALLOWED_LEFT_CONTEXT_RE = re.compile(
+    r"(?:^|\n|[A-Za-z.,:;)\]}]\s+|vs\.\\ |[\(\[]|(?:^|[ \n(])\$|(?:^|[ \n(])\\textbf\{|(?:^|[ \n(])\d+/\d+ = )$"
 )
-_MODIFIER_RIGHT_RE = re.compile(
-    r"^(?:\\,|~|\$|\{|\}|\s)*(?:(?<!-)--(?!-)|(?<!-)-(?!-)|[+−/*^]|\\(?:pm|mp|minus|times|cdot|div)\b|\d)"
+_ALLOWED_RIGHT_CONTEXT_RE = re.compile(
+    r"^(?:"
+    r": \d| = \d|; |, |\.(?: |\n|$)| (?:[A-Za-z($]|\\texttt\{)|"
+    r"\$(?:[ ,;.)\n]|$)|"
+    r"\)(?:[ ,;.\n\]}]|---|$)|"
+    r"\](?:[ ,;.)\n}$]|$)|"
+    r"\}(?:[ ,;.)\n]|---|$)"
+    r")"
+)
+_ALLOWED_PVAL_RIGHT_RE = re.compile(
+    r"^(?:"
+    r"; |, |\)(?:[ ,;.\n}]|$)|"
+    r"\$(?:; |, | [A-Za-z]|\)(?:[ ,;.\n}]|$)|\} \\\\| \(\\emph\{n\.s\.\\)"
+    r")"
 )
 
 
 def _assert_clean_numeric_context(text: str, start: int, end: int, label: str) -> None:
-    left = text[max(0, start - 32):start]
-    right = text[end:min(len(text), end + 32)]
-    if _MODIFIER_LEFT_RE.search(left):
-        fail(f"{label} has unexpected arithmetic sign/operator prefix in `{left}{text[start:end]}`")
-    if _MODIFIER_RIGHT_RE.search(right):
-        fail(f"{label} has unexpected arithmetic operator/digit suffix in `{text[start:end]}{right}`")
+    left = text[max(0, start - 20):start]
+    right = text[end:min(len(text), end + 20)]
+    if not _ALLOWED_LEFT_CONTEXT_RE.search(left):
+        fail(f"{label} disallowed left context: `{left}<HERE>{text[start:end]}`")
+    if not _ALLOWED_RIGHT_CONTEXT_RE.search(right):
+        fail(f"{label} disallowed right context: `{text[start:end]}<HERE>{right}`")
 
 
 def _resolve_git_root() -> Path | None:
@@ -339,9 +350,12 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
     if total_peq != len(exp_all_pvals) or got_all_pvals != exp_all_pvals:
         fail(f"Document p-value sequence mismatch (total `p =`={total_peq}):\n  got={got_all_pvals}\n  exp={exp_all_pvals}")
     for m in pval_matches:
-        right = tex[m.end():min(len(tex), m.end() + 32)]
-        if _MODIFIER_RIGHT_RE.search(right):
-            fail(f"Document p-value has unexpected trailing operator/digit in `{m.group(0)}{right}`")
+        left = tex[max(0, m.start() - 12):m.start()]
+        right = tex[m.end():min(len(tex), m.end() + 20)]
+        if not re.search(r"(?:[ ($]|\\textbf\{\$)$", left):
+            fail(f"Document p-value has disallowed left context in `{left}<HERE>{m.group(0)}`")
+        if not _ALLOWED_PVAL_RIGHT_RE.search(right):
+            fail(f"Document p-value has disallowed right context in `{m.group(0)}<HERE>{right}`")
     checks += len(exp_all_pvals)
 
     # 5. Bibliography, README (228 passes verified against JSONLs), & no stale files in REPO / paper
