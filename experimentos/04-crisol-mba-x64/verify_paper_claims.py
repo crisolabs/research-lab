@@ -46,6 +46,7 @@ _ALLOWED_PVAL_LEFT_RE = re.compile(
     r"(?:[,;(] |(?:McNemar|test|sided) \$| & \$| & \\textbf\{\$|[;,] \$)$"
 )
 CANONICAL_PROSE_SKELETON_SHA256 = "1cb34732e47ee23e1cfed54187b744d1c42f305ac6a22dbdebce7ccc4108d2e8"
+CANONICAL_MAIN_TEX_SHA256 = "562e2eda9083051dc3f4c83ae5aede3ac7d63925d625da6219f402ec50dd52dd"
 _ALLOWED_PVAL_RIGHT_RE = re.compile(
     r"^(?:"
     r"; |, |\)(?:[ ,;.\n}]|$)|"
@@ -189,31 +190,29 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
     rows_h = [json.loads(l) for l in (REPO / "data" / "results_test_H_hydrogen.jsonl").open() if l.strip()]
     rows_hs = [json.loads(l) for l in (REPO / "data" / "results_test_H_sol40.jsonl").open() if l.strip()]
 
-    # Cross-check CSV vs JSONL row-by-row (keyed by unique (config, instance_id)) for both results_test and results_pilot_dev!
+    # Cross-check ALL 14 columns as exact strings between CSV and JSONL (keyed by unique (config, instance_id))!
+    expected_csv_cols = [
+        "config", "instance_id", "family", "passed", "status", "elapsed_sec",
+        "smt_calls", "llm_calls", "candidates_tried", "best_expr", "best_cost",
+        "ground_truth_cost", "lrat_sha256", "detail",
+    ]
     for label_pair, js_rows, csv_rows, exp_len in [
         ("results_test", rows_t, rows_t_csv, 640),
         ("results_pilot_dev", rows_p, rows_p_csv, 80),
     ]:
         if len(js_rows) != exp_len or len(csv_rows) != exp_len:
             fail(f"{label_pair} row count mismatch: jsonl={len(js_rows)}, csv={len(csv_rows)}, expected={exp_len}")
+        if list(csv_rows[0].keys()) != expected_csv_cols:
+            fail(f"{label_pair}.csv header columns mismatch: {list(csv_rows[0].keys())}")
         js_by_key = {(r["config"], r["instance_id"]): r for r in js_rows}
         csv_by_key = {(r["config"], r["instance_id"]): r for r in csv_rows}
         if len(js_by_key) != exp_len or set(js_by_key.keys()) != set(csv_by_key.keys()):
             fail(f"{label_pair} unique key mismatch between .jsonl and .csv")
         for k, jr in js_by_key.items():
             cr = csv_by_key[k]
-            if (
-                jr["family"] != cr["family"]
-                or str(jr["passed"]) != cr["passed"]
-                or jr["status"] != cr["status"]
-                or f"{jr['elapsed_sec']:.9f}" != f"{float(cr['elapsed_sec']):.9f}"
-                or int(jr["smt_calls"]) != int(cr["smt_calls"])
-                or int(jr["llm_calls"]) != int(cr["llm_calls"])
-                or int(jr["candidates_tried"]) != int(cr["candidates_tried"])
-                or (jr.get("best_expr") or "") != (cr.get("best_expr") or "")
-                or (jr.get("lrat_sha256") or "") != (cr.get("lrat_sha256") or "")
-            ):
-                fail(f"Row mismatch between {label_pair}.jsonl and .csv on {k}")
+            jr_str = {c: ("" if jr.get(c) is None else str(jr.get(c))) for c in expected_csv_cols}
+            if set( jr.keys() ) != set(expected_csv_cols) or jr_str != cr:
+                fail(f"Exact 14-column mismatch between {label_pair}.jsonl and .csv on {k}")
     checks += 4
 
     # Verify 362 Phase-1 PASS LRAT SHA-256 digests and 0 final LIFTER_BUG verdicts
@@ -512,6 +511,11 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
     got_skel_sha = hashlib.sha256(skel.encode("utf-8")).hexdigest()
     if got_skel_sha != CANONICAL_PROSE_SKELETON_SHA256:
         fail(f"Masked prose/LaTeX skeleton modified (unexpected prose/operator edit): {got_skel_sha}")
+    if hashlib.sha256(tex.encode("utf-8")).hexdigest() != CANONICAL_MAIN_TEX_SHA256:
+        fail("main.tex byte-level SHA-256 mismatch (unexpected whitespace/CRLF or character edit)!")
+    if TEX_PATH.exists() and hashlib.sha256(TEX_PATH.read_bytes()).hexdigest() != CANONICAL_MAIN_TEX_SHA256:
+        fail("On-disk main.tex raw bytes SHA-256 mismatch (e.g., LF->CRLF line-ending conversion)!")
+    checks += 1
     tar_path = REPO / "paper" / "arxiv-crisol-mba-x64-v1.tar.gz"
     arxiv_dir = REPO / "paper" / "arxiv-v1"
     if not tar_path.is_file():
