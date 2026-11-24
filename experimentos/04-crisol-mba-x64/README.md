@@ -22,7 +22,7 @@ python3 -m venv .venv
 `replay_offline.py` and `run_phase2.py` expect the following local binaries under `build/` (excluded from Git via `.gitignore`):
 1. **`CaDiCaL` (`build/cadical/build/cadical`)** — CaDiCaL `>= 2.0` / `3.1.0` compiled from source (`git clone https://github.com/arminbiere/cadical build/cadical && cd build/cadical && ./configure && make`).
 2. **`lrat-check` (`build/drat-trim/lrat-check`)** — Independent LRAT proof checker (`git clone https://github.com/marijnheule/drat-trim build/drat-trim && make -C build/drat-trim lrat-check`).
-3. **Lean 4.36.0 (`build/elan`)** — Install `elan` with `ELAN_HOME="$PWD/build/elan"` and default toolchain `leanprover/lean4:v4.36.0` (`ELAN_HOME="$PWD/build/elan" build/elan/bin/elan default leanprover/lean4:v4.36.0`).
+3. **Lean 4.36.0 (`build/elan`)** — Install `elan` under `build/elan` and set the default toolchain to `leanprover/lean4:v4.36.0` (`ELAN_HOME=$PWD/build/elan ./build/elan/bin/elan default leanprover/lean4:v4.36.0`).
 
 ---
 
@@ -42,7 +42,7 @@ python3 verify_paper_claims.py --allow-no-git
 
 ## 3. Test Suite, Offline Certificate Replay & Figure Regeneration (Zero LLM API Keys)
 
-Using the Python `.venv` and `build/` verifiers from Section 1, run the 38-test suite (lifter, Unicorn/CPU 3-way checks, `0x67` `LEA` wrapping, LRAT, and Lean 4 `bv_decide`) and re-verify cached `Hybrid H` outputs (`--mode smoke`: 12 slices in ~30 s; `--mode full`: all 228 archived `H` passes — 182 `H`-Hydrogen + 46 `H`-Sol — across `V_test` and `V_real`, checking canonical cost, LRAT, and Lean 4 `bv_decide`) while regenerating `paper/fig1..fig3`:
+Using the Python `.venv` and `build/` verifiers from Section 1, run the 38-test suite (lifter, Unicorn/CPU 3-way checks, `0x67` `LEA` wrapping, LRAT, and Lean 4 `bv_decide`) and re-verify cached `Hybrid H` outputs (`--mode smoke`: 12 slices in ~30 s; `--mode full`: all 228 archived `H` passes — 182 `H`-Hydrogen + 46 `H`-Sol — across `V_test` and `V_real`, checking canonical cost, LRAT with 60 s per-stage solver caps, and Lean 4 `bv_decide` with 60 s theorem caps across 2 worker processes by default) while regenerating `paper/fig1..fig3`:
 
 ```bash
 .venv/bin/pytest -q

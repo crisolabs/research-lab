@@ -20,6 +20,7 @@ import math
 import re
 import subprocess
 import sys
+import tarfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent
@@ -34,13 +35,17 @@ _ALLOWED_LEFT_CONTEXT_RE = re.compile(
 )
 _ALLOWED_RIGHT_CONTEXT_RE = re.compile(
     r"^(?:"
-    r": \d| = \d|; |, |\.(?: |\n|$)| (?:[A-Za-z($]|\\texttt\{)|"
+    r": \d| = \d|; |, |\.(?: |\n|$)| (?:[A-Za-z(]|\\texttt\{)|"
     r"\$(?:[ ,;.)\n]|$)|"
     r"\)(?:[ ,;.\n\]}]|---|$)|"
     r"\](?:[ ,;.)\n}$]|$)|"
     r"\}(?:[ ,;.)\n]|---|$)"
     r")"
 )
+_ALLOWED_PVAL_LEFT_RE = re.compile(
+    r"(?:[,;(] |(?:McNemar|test|sided) \$| & \$| & \\textbf\{\$|[;,] \$)$"
+)
+CANONICAL_PROSE_SKELETON_SHA256 = "1cb34732e47ee23e1cfed54187b744d1c42f305ac6a22dbdebce7ccc4108d2e8"
 _ALLOWED_PVAL_RIGHT_RE = re.compile(
     r"^(?:"
     r"; |, |\)(?:[ ,;.\n}]|$)|"
@@ -350,9 +355,9 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
     if total_peq != len(exp_all_pvals) or got_all_pvals != exp_all_pvals:
         fail(f"Document p-value sequence mismatch (total `p =`={total_peq}):\n  got={got_all_pvals}\n  exp={exp_all_pvals}")
     for m in pval_matches:
-        left = tex[max(0, m.start() - 12):m.start()]
+        left = tex[max(0, m.start() - 16):m.start()]
         right = tex[m.end():min(len(tex), m.end() + 20)]
-        if not re.search(r"(?:[ ($]|\\textbf\{\$)$", left):
+        if not _ALLOWED_PVAL_LEFT_RE.search(left):
             fail(f"Document p-value has disallowed left context in `{left}<HERE>{m.group(0)}`")
         if not _ALLOWED_PVAL_RIGHT_RE.search(right):
             fail(f"Document p-value has disallowed right context in `{m.group(0)}<HERE>{right}`")
@@ -414,6 +419,26 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
         for m in pc_matches:
             _assert_clean_numeric_context(sec_txt, m.start(), m.end(), f"{sec_name} percentage `{m.group(0)}`")
         checks += 2
+
+    # 5c. Masked LaTeX prose-skeleton SHA-256 + arXiv tarball byte-for-byte integrity!
+    # Once all data-derived numbers/p-values/fractions/percentages are verified above, lock the
+    # surrounding prose/math skeleton so NO operator/word/sign injection anywhere in main.tex passes.
+    skel = re.sub(r"\bp\s*=\s*(?:\d+\.\d+\s*\\times\s*10\^\{-?\d+\}|\d+\.\d+)", "p=<PVAL>", tex)
+    skel = re.sub(r"\b\d+/\d+\b", "<FRAC>", skel)
+    skel = re.sub(r"\d+(?:\.\d+)?\\%", "<PCT>", skel)
+    got_skel_sha = hashlib.sha256(skel.encode("utf-8")).hexdigest()
+    if got_skel_sha != CANONICAL_PROSE_SKELETON_SHA256:
+        fail(f"Masked prose/LaTeX skeleton modified (unexpected prose/operator edit): {got_skel_sha}")
+    tar_path = REPO / "paper" / "arxiv-crisol-mba-x64-v1.tar.gz"
+    arxiv_dir = REPO / "paper" / "arxiv-v1"
+    if not tar_path.is_file():
+        fail(f"Missing arXiv tarball: {tar_path}")
+    with tarfile.open(tar_path, "r:gz") as tf:
+        tar_members = {m.name: tf.extractfile(m).read() for m in tf.getmembers() if m.isfile()}
+    dir_files = {p.name: p.read_bytes() for p in arxiv_dir.iterdir() if p.is_file()}
+    if tar_members != dir_files:
+        fail(f"arXiv tarball `{tar_path.name}` differs from `paper/arxiv-v1/` files!")
+    checks += 2
 
     # 6. Portable git commit SHA verification (`--allow-no-git` for `.git`-less Zenodo archive downloads)
     shas = re.findall(r"commit\s+\\texttt\{([0-9a-f]{7,40})\}", tex)

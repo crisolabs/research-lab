@@ -169,8 +169,8 @@ def fig3_real_and_tradeoff() -> None:
         ax2.plot(t, r, marker=mk, markersize=ms, color=col, linestyle="None", label=lbl)
         ax2.annotate(lbl.split(" ")[0], (t + 1.2, r - 2.0), fontsize=9, fontweight="bold", color=col)
 
-    ax2.set_xlabel("Mean Wall-Clock Time per Slice (seconds, cap = 60s)")
-    ax2.set_ylabel("LRAT-Certified Pass Rate on V_test (%)")
+    ax2.set_xlabel("Mean Wall-Clock Time per Slice (s, loop-entry 60s budget)")
+    ax2.set_ylabel("LRAT-Certified Pass Rate on V_test (%, in-flight)")
     ax2.set_title("Accuracy vs. Latency Trade-off on V_test (N = 160)")
     ax2.set_xlim(-2, 62)
     ax2.set_ylim(0, 108)
