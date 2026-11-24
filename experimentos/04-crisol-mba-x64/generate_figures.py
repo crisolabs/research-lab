@@ -54,13 +54,13 @@ def fig1_vtest_ablation() -> None:
     fig, ax = plt.subplots(figsize=(11.5, 4.6))
 
     ax.bar(x - 2.5*w, a_vals, w, label="A: SiMBA + Enum", color="#94a3b8")
-    ax.bar(x - 1.5*w, g_vals, w, label="GAMBA (Official)", color="#64748b")
+    ax.bar(x - 1.5*w, g_vals, w, label="GAMBA (Official, uncert.)", color="#64748b")
     ax.bar(x - 0.5*w, c_vals, w, label="C: MCMC-CEGIS (No-LLM)", color="#cbd5e1", edgecolor="#475569", linewidth=0.6)
     ax.bar(x + 0.5*w, b_vals, w, label="B: LLM One-Shot (K=8)", color="#60a5fa")
     ax.bar(x + 1.5*w, d_vals, w, label="D: CRISOL CEGIS (4×2)", color="#2563eb")
     ax.bar(x + 2.5*w, h_vals, w, label="H: CRISOL Hybrid (6→2×2)", color="#0f766e")
 
-    ax.set_ylabel("LRAT-Certified Pass Rate (%)")
+    ax.set_ylabel("Pass / Simplification Rate (%)\n(LRAT-certified; GAMBA uncert.)")
     ax.set_title("Benchmark 1 (V_test, N = 160): Certified Deobfuscation Rate Across 8 Disjoint x86-64 Families")
     ax.set_xticks(x)
     ax.set_xticklabels(short_labels, fontsize=8.5)
@@ -90,7 +90,7 @@ def fig2_vhard_lean4() -> None:
     fig, ax = plt.subplots(figsize=(7.6, 4.2))
     b1 = ax.bar(x - 1.5*w, z3_v, w, label="Z3 QF_BV (unverified)", color="#ef4444")
     b2 = ax.bar(x - 0.5*w, lrat_v, w, label="Z3 bit-blast + CaDiCaL LRAT", color="#f97316")
-    b3 = ax.bar(x + 0.5*w, lean_v, w, label="Lean 4 bv_decide (kernel-verified)", color="#0f766e")
+    b3 = ax.bar(x + 0.5*w, lean_v, w, label="Lean 4 bv_decide (certified)", color="#0f766e")
     b4 = ax.bar(x + 1.5*w, bz_v, w, label="Bitwuzla QF_BV (unverified)", color="#94a3b8", hatch="//", edgecolor="#334155")
 
     for bars in (b1, b2, b3, b4):
@@ -99,7 +99,7 @@ def fig2_vhard_lean4() -> None:
             ax.annotate(f"{h:.0f}%", (bar.get_x() + bar.get_width()/2, h + 1.5), ha="center", va="bottom", fontsize=8.5, fontweight="bold")
 
     ax.set_ylabel("Equivalence Proofs Closed (%)")
-    ax.set_title("Benchmark 2 (V_hard, N = 40 IMUL Slices): Kernel-Verified Lean 4 bv_decide vs Raw SAT Bit-Blasting")
+    ax.set_title("Benchmark 2 (V_hard, N = 40 IMUL Slices): Certified Lean 4 bv_decide vs Raw SAT Bit-Blasting")
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.set_ylim(0, 116)
@@ -170,7 +170,7 @@ def fig3_real_and_tradeoff() -> None:
     ax2.set_xlim(-2, 62)
     ax2.set_ylim(0, 108)
     ax2.grid(True, linestyle="--", alpha=0.35)
-    ax2.legend(loc="lower right", frameon=True, fontsize=8)
+    ax2.legend(ncol=2, loc="upper center", bbox_to_anchor=(0.5, -0.22), frameon=False, fontsize=8)
 
     fig.tight_layout()
     fig.savefig(PAPER_DIR / "fig3_real_o2_and_tradeoff.png", bbox_inches="tight")

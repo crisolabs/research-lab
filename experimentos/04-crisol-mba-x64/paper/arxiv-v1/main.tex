@@ -3,10 +3,11 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage[margin=1in]{geometry}
+\usepackage[margin=0.95in]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{xurl}
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{microtype}
@@ -21,7 +22,7 @@
   pdfauthor={Luis Alejandro Arancibia}
 }
 
-\title{\textbf{CRISOL-MBA\textperiodcentered x64: Certified Neuro-Symbolic Deobfuscation of x86-64 Machine-Code Slices via Hybrid CEGIS and Lean 4 \texttt{bv\_decide}}}
+\title{\textbf{CRISOL-MBA-x64: Certified Neuro-Symbolic Deobfuscation of x86-64 Machine-Code Slices via Hybrid CEGIS and Lean 4 \texttt{bv\_decide}}}
 
 \author{
   Luis Alejandro Arancibia\\
@@ -38,12 +39,12 @@
 \begin{abstract}
 Mixed Boolean-Arithmetic (MBA) obfuscation remains a primary barrier in binary reverse engineering, malware analysis, and security auditing. Algebraic simplifiers such as SiMBA, GAMBA, ProMBA, and RUMBA achieve high speed on pure expression trees, yet fail when obfuscation is compiled into real x86-64 machine code entangled with carry-flag propagation (\texttt{ADC}/\texttt{SBB}), 32-to-64-bit zero-extension, arithmetic shifts (\texttt{SAR}), and bit rotations (\texttt{ROL}/\texttt{ROR}). Conversely, neural approaches such as LLM4Decompile and gMBA operate on string expressions or evaluate only finite test-case re-executability without universal formal guarantees, exposing analysts to silent edge-case hallucinations.
 
-We present \textbf{CRISOL-MBA\textperiodcentered x64}, a certified neuro-symbolic deobfuscation framework that pairs LLM candidate synthesis with a strictly sound, zero-LLM-trust verification pipeline: a minimalist x86-64 lifter empirically cross-checked on 1,024 concrete vectors against native x86-64 execution and Unicorn (0 discrepancies across 82,944 three-way checks covering 31 instruction unit tests, 28 dataset-sanity slices, and all 22 \texttt{V\_real} slices), a vectorized concrete pre-filter, dual \texttt{QF\_BV} SMT solvers (Bitwuzla + Z3), and independently checked \textbf{LRAT} SAT proof certificates (\texttt{CaDiCaL} + \texttt{lrat-check}) as well as \textbf{Lean 4 \texttt{bv\_decide}} proof certificates that verify bit-blasting inside Lean.
+We present \textbf{CRISOL-MBA-x64}, a certified neuro-symbolic deobfuscation framework that pairs LLM candidate synthesis with a zero-LLM-trust verification pipeline that is sound relative to the declared Trusted Computing Base (TCB): a minimalist x86-64 lifter empirically cross-checked on 1,024 concrete vectors against native x86-64 execution and Unicorn (0 discrepancies across 82,944 three-way checks covering 31 instruction unit tests, 28 dataset-sanity slices, and all 22 \texttt{V\_real} slices), a vectorized concrete pre-filter, dual \texttt{QF\_BV} SMT solvers (Bitwuzla + Z3), and independently checked \textbf{LRAT} SAT proof certificates (\texttt{CaDiCaL} + \texttt{lrat-check}) as well as \textbf{Lean 4 \texttt{bv\_decide}} proof certificates that verify bit-blasting inside Lean.
 
-Following a pre-registered anti-leakage protocol with disjoint identity families, we evaluate CRISOL-MBA\textperiodcentered x64 across three frozen benchmarks:
-(1) \textbf{Benchmark 1 ($V_{\mathrm{test}}$, $N=160$ straight-line x86-64 slices, 8 disjoint families, 60\,s cap):} the best deterministic baseline (\texttt{SiMBA} + cost-bounded enumerator + Xyntia/STOKE-style MCMC-CEGIS, $A \cup C$) solves \textbf{26.25\% (42/160)} and official Denuvo \textbf{GAMBA} (uncertified algebraic simplification) covers \textbf{25.00\% (40/160)}. Our confirmatory pre-registered CEGIS configuration $D$ reaches \textbf{91.25\% (146/160; $+65.0$\,pp, exact McNemar $p = 9.86 \times 10^{-32}$)}, One-Shot $B$ ($K=8$) reaches \textbf{96.25\% (154/160)}, and our exploratory (post-hoc) Hybrid architecture $H$ (Wide One-Shot $K=6 \to$ CEGIS fallback) reaches \textbf{100.0\% (160/160; 95\% Clopper-Pearson CI $[97.7\%, 100\%]$; $+73.75$\,pp vs.\ $A \cup C$, $p = 6.02 \times 10^{-36}$)} with \texttt{gemini-4-hydrogen-medium} and \textbf{100.0\% (40/40)} on a stratified cross-family subset with \texttt{gpt-6.2-sol}.
-(2) \textbf{Benchmark 2 ($V_{\mathrm{hard}}$, $N=40$ \texttt{IMUL} ground-truth equivalence proofs $F_B \equiv g$):} while uncertified Bitwuzla closes 40/40, both Z3 \texttt{QF\_BV} and raw Z3 bit-blasting + CaDiCaL LRAT close \textbf{0/40 (0.0\%)}; \textbf{Lean 4 \texttt{bv\_decide}} raises certified proofs from \textbf{0\% to 80.0\% (32/40)}, including \textbf{20/20 (100\%)} on 32-bit \texttt{IMUL} slices in 8.22\,s mean time.
-(3) \textbf{Benchmark 3 ($V_{\mathrm{real}}$, $N=22$ real \texttt{gcc -O2} and \texttt{clang -O2} compiled C functions):} deterministic baselines $A$ and $C$ solve \textbf{0/22 (0.0\%)}, whereas \textbf{Hybrid $H$ + Lean 4 \texttt{bv\_decide}} certifies \textbf{22/22 (100.0\%; 95\% CI $[84.6\%, 100\%]$; $p = 4.77 \times 10^{-7}$)} in 23.44\,s mean time (\texttt{H-sol}: 6/22 = 27.27\%, $p = 0.031$, not significant at $\alpha = 0.01$ under the 60\,s CLI latency cap).
+Following a pre-registered anti-leakage protocol with disjoint identity families, we evaluate CRISOL-MBA-x64 across three frozen benchmarks:
+(1)~\textbf{Benchmark 1 ($V_{\mathrm{test}}$, $N=160$ straight-line x86-64 slices, 8 disjoint families, 60\,s cap):} the best deterministic baseline (\texttt{SiMBA} + cost-bounded enumerator + Xyntia/STOKE-style MCMC-CEGIS, $A \cup C$) solves \textbf{26.25\% (42/160)} and official Denuvo \textbf{GAMBA} (uncertified algebraic simplification via our x86-64 expression adapter) covers \textbf{25.00\% (40/160)}. Our confirmatory pre-registered CEGIS configuration $D$ reaches \textbf{91.25\% (146/160; $+65.0$\,pp, exact McNemar $p = 9.86 \times 10^{-32}$)}, One-Shot $B$ ($K=8$) reaches \textbf{96.25\% (154/160)}, and our exploratory (post-hoc) Hybrid architecture $H$ (Wide One-Shot $K=6 \to$ CEGIS fallback) reaches \textbf{100.0\% (160/160; 95\% Clopper-Pearson CI $[97.7\%, 100\%]$; $+73.75$\,pp vs.\ $A \cup C$, $p = 6.02 \times 10^{-36}$)} with \texttt{gemini-4-hydrogen} (Medium reasoning) and \textbf{100.0\% (40/40)} on a stratified cross-family subset with \texttt{gpt-6.2-sol}.
+(2)~\textbf{Benchmark 2 ($V_{\mathrm{hard}}$, $N=40$ \texttt{IMUL} ground-truth equivalence proofs $F_B \equiv g$):} while uncertified Bitwuzla closes 40/40, both Z3 \texttt{QF\_BV} and raw Z3 bit-blasting + CaDiCaL LRAT close \textbf{0/40 (0.0\%)}; \textbf{Lean 4 \texttt{bv\_decide}} raises certified proofs from \textbf{0\% to 80.0\% (32/40)}, including \textbf{20/20 (100\%)} on 32-bit \texttt{IMUL} slices in 8.22\,s mean time.
+(3)~\textbf{Benchmark 3 ($V_{\mathrm{real}}$, $N=22$ real \texttt{gcc -O2} and \texttt{clang -O2} compiled C functions):} deterministic baselines $A$ and $C$ solve \textbf{0/22 (0.0\%)}, whereas \textbf{Hybrid $H$ + Lean 4 \texttt{bv\_decide}} certifies \textbf{22/22 (100.0\%; 95\% CI $[84.6\%, 100\%]$; $p = 4.77 \times 10^{-7}$)} in 23.44\,s mean time (\texttt{H-sol}: 6/22 = 27.27\%, $p = 0.031$, not significant at $\alpha = 0.01$ under the 60\,s CLI latency cap).
 Mutation testing and pre-filter-evading negatives yielded 0 false positives, and all 362 Phase~1 \texttt{PASS} verdicts were independently re-verified.
 \end{abstract}
 
@@ -53,20 +54,21 @@ Software protection schemes, digital rights management (DRM), and malware routin
 
 Existing deobfuscation paradigms face a three-way impasse:
 \begin{itemize}[leftmargin=1.5em]
-  \item \textbf{Algebraic MBA solvers} (MBA-Blast~\cite{mbablast2021}, SiMBA~\cite{simba2022}, GAMBA~\cite{gamba2023}, ProMBA~\cite{promba2023,promba2026tosem}, RUMBA~\cite{rumba2026}) operate on pure expression ASTs over $\mathbb{Z}_{2^n}$ without modeling x86-64 carry flags, rotations, or 32-to-64-bit zero-extension.
+  \item \textbf{Algebraic MBA solvers} (MBA-Blast~\cite{mbablast2021}, SiMBA~\cite{simba2022}, GAMBA~\cite{gamba2023}, ProMBA~\cite{promba2023,promba2026tosem}, RUMBA~\cite{rumba2026}) operate on pure expression ASTs over $\mathbb{Z}_{2^n}$ without modeling x86-64 carry flags, rotations, or 32-to-64-bit zero-extension directly.
   \item \textbf{Black-box search and superoptimization} (STOKE~\cite{stoke2013}, Xyntia~\cite{xyntia2021}) handle arbitrary machine semantics via I/O traces, but suffer combinatorial explosion once expressions combine 3--4 inputs, carry flags, shifts, and rotations.
   \item \textbf{Neural decompilation and MBA translation} (LLM4Decompile~\cite{llm4decompile2024}, gMBA~\cite{gmba2025}) recover readable approximations, yet operate on expression strings without binary semantics (gMBA) or evaluate only finite test-case re-executability (LLM4Decompile), offering zero guarantee against edge-case divergence on $2^{64}$ bit-vector inputs.
 \end{itemize}
 
-\textbf{Key insight.} In formal mathematics, LLMs achieve breakthroughs when paired with a \emph{deterministic verification oracle}: finding a candidate proof or simplified form is hard, but checking universal equivalence is objective and machine-verifiable. \textbf{CRISOL-MBA\textperiodcentered x64} transfers this principle to straight-line x86-64 binary deobfuscation, separating untrusted candidate synthesis from certified formal verification.
+\textbf{Key insight.} In formal mathematics, LLMs achieve breakthroughs when paired with a \emph{deterministic verification oracle}: finding a candidate proof or simplified form is hard, but checking universal equivalence is objective and machine-verifiable. \textbf{CRISOL-MBA-x64} transfers this principle to straight-line x86-64 binary deobfuscation, separating untrusted candidate synthesis from certified formal verification backed by SMT solvers~\cite{z3_2008,bitwuzla2023}, LRAT SAT proofs~\cite{lrat2017,cadical2024}, and Lean~4~\cite{lean4_2021}.
 
 \section{Related Work}
 
-Table~\ref{tab:related} situates CRISOL-MBA\textperiodcentered x64 against prior algebraic, search-based, and neural deobfuscation systems.
+Table~\ref{tab:related} situates CRISOL-MBA-x64 against prior algebraic, search-based, and neural deobfuscation systems.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \scriptsize
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}llllll@{}}
 \toprule
 \textbf{System} & \textbf{Venue / Year} & \textbf{Domain} & \textbf{Neural Prior} & \textbf{x86-64 (\texttt{CF}, 32$\to$64)} & \textbf{Checkable Cert.} \\
@@ -80,9 +82,10 @@ ProMBA~\cite{promba2023,promba2026tosem} & CCS '23 / TOSEM '26 & MBA AST & No (S
 LLM4Decompile~\cite{llm4decompile2024} & EMNLP '24 & Asm $\to$ C & Yes & Partial (tests) & No \\
 gMBA~\cite{gmba2025} & ACL Findings '25 & MBA strings & Yes (Transformer) & No & No \\
 RUMBA~\cite{rumba2026} & HAL '26 & Linear/Poly MBA & No & No & No \\
-\textbf{CRISOL-MBA\textperiodcentered x64} & \textbf{2026} & \textbf{x86-64 bytes} & \textbf{Yes (Hybrid CEGIS)} & \textbf{Yes (Native-checked)} & \textbf{LRAT + Lean 4 \texttt{bv\_decide}} \\
+\textbf{CRISOL-MBA-x64} & \textbf{2026} & \textbf{x86-64 bytes} & \textbf{Yes (Hybrid CEGIS)} & \textbf{Yes (Native-checked)} & \textbf{LRAT + Lean 4 \texttt{bv\_decide}} \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \caption{Comparison with state-of-the-art algebraic, search-based, and neural MBA deobfuscators.}
 \label{tab:related}
 \end{table}
@@ -90,24 +93,37 @@ RUMBA~\cite{rumba2026} & HAL '26 & Linear/Poly MBA & No & No & No \\
 \section{Formal Problem Statement and Trusted Computing Base}
 
 Let $B \in \{0,1\}^{8L}$ be a straight-line, register-only x86-64 byte sequence of at most 24 instructions drawn from a closed allowlist of 17 mnemonics:
-\[
-\mathcal{M} = \{\texttt{MOV}, \texttt{LEA}_{\mathrm{reg}}, \texttt{ADD}, \texttt{ADC}, \texttt{SUB}, \texttt{SBB}, \texttt{NEG}, \texttt{IMUL}_{\mathrm{non\text{-}nested}}, \texttt{AND}, \texttt{OR}, \texttt{XOR}, \texttt{NOT}, \texttt{SHL}/\texttt{SAL}, \texttt{SHR}, \texttt{SAR}, \texttt{ROL}, \texttt{ROR}\}
-\]
-with immediate shift/rotate counts and no memory accesses, branches, or system calls. Under the System~V x86-64 register contract, $B$ defines a deterministic bit-vector function $F_B : (\mathrm{BV}_{64})^4 \times \mathrm{BV}_1 \to \mathrm{BV}_{64}$, mapping $(\texttt{rdi}, \texttt{rsi}, \texttt{rdx}, \texttt{rcx}, \texttt{cf}) \mapsto \texttt{rax}_{\mathrm{out}}$. Given a canonical functional bit-vector grammar $\mathcal{G}$, a CSE + constant-folding cost metric $\mathrm{Cost}(\cdot)$, ground-truth cost $c_g$, and margin $\varepsilon = 0.10$, a candidate $e \in \mathcal{G}$ is a \textbf{certified simplification} iff $\mathrm{Cost}(e) \le (1+\varepsilon)\,c_g$ and $\forall \vec{x},\ F_B(\vec{x}) = \llbracket e \rrbracket(\vec{x})$ is backed by an independently verified certificate (LRAT via \texttt{lrat-check} or a Lean~4 \texttt{bv\_decide} proof).
+\begin{align*}
+\mathcal{M} = \{\,&\texttt{MOV}, \texttt{LEA}_{\mathrm{reg}}, \texttt{ADD}, \texttt{ADC}, \texttt{SUB}, \texttt{SBB}, \texttt{NEG}, \texttt{IMUL}_{\mathrm{non\text{-}nested}},\\
+&\texttt{AND}, \texttt{OR}, \texttt{XOR}, \texttt{NOT}, \texttt{SHL}/\texttt{SAL}, \texttt{SHR}, \texttt{SAR}, \texttt{ROL}, \texttt{ROR}\,\}
+\end{align*}
+with immediate shift/rotate counts and no memory accesses, branches, or system calls. Under the System~V x86-64 register contract, $B$ defines a deterministic bit-vector function $F_B : (\mathrm{BV}_{64})^4 \times \mathrm{BV}_1 \to \mathrm{BV}_{64}$, mapping $(\texttt{rdi}, \texttt{rsi}, \texttt{rdx}, \texttt{rcx}, \texttt{cf}) \mapsto \texttt{rax}_{\mathrm{out}}$. Given a canonical functional bit-vector grammar $\mathcal{G}$, a CSE + constant-folding cost metric $\mathrm{Cost}(\cdot)$, ground-truth cost $c_g$, and margin $\varepsilon = 0.10$, a candidate $e \in \mathcal{G}$ is a \textbf{certified simplification} iff $\mathrm{Cost}(e) \le (1+\varepsilon)\,c_g$ and $\forall \vec{x},\ F_B(\vec{x}) = [\![ e ]\!](\vec{x})$ is backed by an independently verified certificate (LRAT via \texttt{lrat-check}~\cite{lrat2017} or a Lean~4 \texttt{bv\_decide} proof~\cite{lean4_2021}).
 
 \paragraph{Explicit TCB Boundary.}
-Under \texttt{CaDiCaL}~\cite{cadical2024} + \texttt{lrat-check}, the SAT solver is outside the TCB while Z3's bit-blaster remains inside. Under \textbf{Lean 4 \texttt{bv\_decide}}, bit-blasting is formally verified inside Lean, while Lean's kernel, Lean's compiler/runtime (invoked via \texttt{Lean.ofReduceBool}), our Python theorem emitter (\texttt{oracle\_lean.py}), and the minimalist x86-64 lifter remain in the TCB. Lifter fidelity ($B \to F_B$) is anchored empirically by our Sanity Gate: 31 closed-list instruction unit tests, 28 dataset-sanity slices, and all 22 $V_{\mathrm{real}}$ slices (82,944 three-way checks total across 1,024 concrete vectors each) showed \textbf{0 discrepancies} between real x86-64 CPU execution (\texttt{mmap} RX trampoline), Unicorn, and our \texttt{QF\_BV} lifter.
+Our verification pipeline is sound \emph{relative to the declared TCB}:
+\begin{itemize}[leftmargin=1.5em]
+  \item Under \texttt{CaDiCaL}~\cite{cadical2024} + \texttt{lrat-check}~\cite{lrat2017}, the SAT solver is outside the TCB while Z3's bit-blaster~\cite{z3_2008} remains inside.
+  \item Under \textbf{Lean 4.36.0 \texttt{bv\_decide}}~\cite{lean4_2021}, bit-blasting is formally verified inside Lean; running \texttt{\#print axioms} on our generated theorems reports \texttt{[propext, Classical.choice, Quot.sound, <thm>.\_native.bv\_decide.ax\_*]}, reflecting Lean~4.36.0's theorem-scoped native-evaluation axiom. Thus Lean's kernel, Lean's compiler/runtime (for native reflection), our Python theorem emitter (\texttt{oracle\_lean.py}), and the minimalist x86-64 lifter remain in the TCB.
+  \item Lifter fidelity ($B \to F_B$) is empirically anchored—not formally mechanized—by our Sanity Gate: 31 closed-list instruction unit tests, 28 dataset-sanity slices, and all 22 $V_{\mathrm{real}}$ slices (\textbf{82,944 three-way checks} across 1,024 concrete vectors each) showed \textbf{0 discrepancies} between native x86-64 CPU execution (\texttt{mmap} RX trampoline), Unicorn~\cite{unicorn2015}, and our \texttt{QF\_BV} lifter.
+\end{itemize}
 
 \section{System Architecture and Experimental Protocol}
 
-CRISOL-MBA\textperiodcentered x64 runs entirely on CPU (18 vCPU, 94\,GB RAM, no GPU) in five stages:
-(0)~\texttt{capstone} decodes bytes and enforces $\mathcal{M}$ and the 24-instruction cap at 0 tokens;
+CRISOL-MBA-x64 runs entirely on CPU (18 vCPU, 94\,GB RAM, Linux x86-64, no GPU) in five stages:
+(0)~\texttt{capstone}~\cite{capstone2014} decodes bytes and enforces $\mathcal{M}$ and the 24-instruction cap at 0 tokens;
 (1)~candidate synthesis via $A$ (exact SiMBA basis solver + cost-bounded enumerator), $C$ (Xyntia/STOKE-style MCMC-CEGIS without LLM), $B$ (LLM One-Shot, $K=8$), $D$ (Sequential CEGIS, $4\times 2$ with concrete counterexample feedback), or $H$ (Hybrid Wide One-Shot $K=6 \to$ CEGIS $2\times 2$ fallback);
 (2)~\texttt{numpy} concrete pre-filter on 1,024+ boundary, one-hot, and counterexample vectors (rejects only, never approves);
-(3)~dual \texttt{QF\_BV} miter in Bitwuzla and Z3 with native CPU replay of every \texttt{SAT} counterexample (non-reproducing \texttt{SAT} triggers \texttt{LIFTER\_BUG}, counted as \texttt{FAIL}); and
+(3)~dual \texttt{QF\_BV} miter in Bitwuzla~\cite{bitwuzla2023} and Z3~\cite{z3_2008} with native CPU replay of every \texttt{SAT} counterexample (non-reproducing \texttt{SAT} triggers \texttt{LIFTER\_BUG}, counted as \texttt{FAIL}); and
 (4)~mandatory certificate checking via \texttt{CaDiCaL 3.1.0 --lrat=true --binary=false} + \texttt{lrat-check} (with deterministic DIMACS header normalization fixing Z3's \texttt{goal.dimacs()} off-by-one \texttt{max\_var} bug) or \textbf{Lean 4.36.0 \texttt{bv\_decide}}.
 
-All hypotheses ($+15$\,pp, $\varepsilon = 0.10$, exact paired McNemar $\alpha = 0.01$), instruction allowlists, and Go/No-Go criteria were pre-registered and SHA-256 frozen prior to running any model on test data. Four development families ($V_{\mathrm{dev}}=40$) were strictly disjoint from ten test families prior to assembly with GNU \texttt{as} + \texttt{objcopy}. Separating search hardness from verification hardness partitioned the 200 compiled test slices into $V_{\mathrm{test}}=160$ (8 families $\times$ 20, LRAT-verified) and $V_{\mathrm{hard}}=40$ (20 \texttt{poly\_mul\_32} + 20 \texttt{poly\_mul\_64}).
+\paragraph{Models and CLI Invocation.}
+All LLM experiments were executed on November~23, 2026 using two publicly available models via local CLI wrappers:
+(a)~\texttt{gemini-4-hydrogen} (Medium reasoning variant, invoked via \texttt{agy 1.5.15} with \texttt{--model} \texttt{gemini-4-hydrogen-medium} \texttt{--disable-slash-commands -p}; single-turn text prompt with slash commands disabled, though without an explicit CLI tool-denial flag); and
+(b)~\texttt{gpt-6.2-sol} (invoked via \texttt{codex-cli 0.170.0} with \texttt{codex exec -m gpt-6.2-sol} \texttt{-c model\_reasoning\_effort="low"} \texttt{--skip-git-repo-check} \texttt{--sandbox read-only}).
+Regardless of how candidates are produced, every candidate is strictly parsed into $\mathcal{G}$ and independently verified from scratch by Stages~2--4.
+
+\paragraph{Pre-Registration and Anti-Leakage.}
+All hypotheses ($+15$\,pp, $\varepsilon = 0.10$, exact paired McNemar $\alpha = 0.01$), instruction allowlists, and Go/No-Go criteria were frozen in commit \texttt{48b0419} (with SHA-256 manifests certifying content integrity prior to test execution; publication timestamps are anchored by GitHub and Zenodo). Four development families ($V_{\mathrm{dev}}=40$) were strictly disjoint from ten test families prior to assembly with GNU \texttt{as} + \texttt{objcopy}. Separating search hardness from verification hardness partitioned the 200 compiled test slices into $V_{\mathrm{test}}=160$ (8 families $\times$ 20, LRAT-verified) and $V_{\mathrm{hard}}=40$ (20 \texttt{poly\_mul\_32} + 20 \texttt{poly\_mul\_64}).
 
 \section{Evaluation Results}
 
@@ -115,9 +131,10 @@ All hypotheses ($+15$\,pp, $\varepsilon = 0.10$, exact paired McNemar $\alpha = 
 
 Table~\ref{tab:vtest} and Figure~\ref{fig:vtest} report results under an identical 60\,s wall-clock cap (including LLM latency) and 16-call SMT budget.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \footnotesize
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
 \textbf{Config} & \textbf{Description} & \textbf{PASS / 160} & \textbf{Rate (\%)} & \textbf{Mean (s)} & \textbf{LLM Calls} & \texttt{LIFTER\_BUG} \\
@@ -127,17 +144,18 @@ GAMBA & Official Denuvo GAMBA (\emph{uncertified}) & 40 / 160 & 25.00 & --- & 0.
 $C$ & Xyntia/STOKE MCMC-CEGIS (No-LLM, LRAT) & 42 / 160 & 26.25 & 50.50 & 0.00 & 0 \\
 $A \cup C$ & Virtual best deterministic (pre-registered) & 42 / 160 & 26.25 & --- & 0.00 & 0 \\
 $A \cup C \cup \text{GAMBA}$ & Virtual best incl.\ official GAMBA (\emph{uncert.}) & 56 / 160 & 35.00 & --- & 0.00 & --- \\
-$B$ & LLM One-Shot (\texttt{gemini-4-hydrogen-medium}, $K=8$) & 154 / 160 & 96.25 & 25.29 & 1.00 & 0 \\
+$B$ & LLM One-Shot (\texttt{gemini-4-hydrogen}, $K=8$) & 154 / 160 & 96.25 & 25.29 & 1.00 & 0 \\
 $D$ & \textbf{Confirm.\ pre-reg.\ CEGIS} ($4\times 2$, LRAT) & \textbf{146 / 160} & \textbf{91.25} & 26.65 & 1.32 & 0 \\
 $H$ (Hydrogen) & \emph{Exploratory} Hybrid ($6 \to 2\times 2$, LRAT) & \textbf{160 / 160} & \textbf{100.00} & 29.60 & 1.01 & 0 \\
 $H$ (GPT-6.2-Sol) & \emph{Exploratory} stratified cross-family ($N=40$) & \textbf{40 / 40} & \textbf{100.00} & 28.51 & --- & 0 \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \caption{Benchmark 1 ($V_{\mathrm{test}}$, $N=160$, 8 disjoint x86-64 families, 60\,s cap).}
 \label{tab:vtest}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{fig1_vtest_ablation.pdf}
 \caption{Certified pass rates across the 8 disjoint x86-64 families of $V_{\mathrm{test}}$ ($N=160$).}
@@ -147,7 +165,7 @@ $H$ (GPT-6.2-Sol) & \emph{Exploratory} stratified cross-family ($N=40$) & \textb
 \begin{itemize}[leftmargin=1.5em]
   \item \textbf{Confirmatory $H_1$ ($D$ vs.\ $A \cup C$):} $+65.0$\,pp ($n_{10}=104$, $n_{01}=0$, exact McNemar $p = 9.86 \times 10^{-32} \ll 0.01$) --- \textbf{CONFIRMED (GO)}.
   \item \textbf{Exploratory Hybrid $H$:} Designed post-hoc after observing the $B$ vs.\ $D$ latency trade-off on $V_{\mathrm{test}}$, $H$ reaches 160/160 (95\% Clopper-Pearson CI $[97.7\%, 100\%]$; $+73.75$\,pp vs.\ $A \cup C$, $p = 6.02 \times 10^{-36}$; vs.\ $B$, $p = 0.031$, not significant at $\alpha=0.01$) in 1.01 mean LLM calls.
-  \item \textbf{GAMBA scope note:} The 120 unsupported slices reflect our x86-64-to-GAMBA algebraic adapter's inability to encode \texttt{ADC}/\texttt{SBB}/\texttt{ROL}/\texttt{ROR} and 32$\to$64-bit zero-extension within a single 64-bit expression (32-bit slices without carry/rotates could be run separately under \texttt{-b 32}).
+  \item \textbf{GAMBA scope note:} The 120 unsupported slices reflect our x86-64-to-GAMBA algebraic adapter's inability to encode \texttt{ADC}/\texttt{SBB}/\texttt{ROL}/\texttt{ROR} and 32$\to$64-bit zero-extension within a single 64-bit expression (pure 32-bit slices without carry/rotates could be run separately under GAMBA's \texttt{-b 32} mode).
   \item \textbf{Independent re-verification:} All 362/362 Phase~1 \texttt{PASS} verdicts ($A+B+C+D$) were independently re-verified (355 via \texttt{CaDiCaL} + \texttt{lrat-check} + 7 \texttt{3var\_carry\_64} slices via Lean~4 \texttt{bv\_decide} in 3.16--6.13\,s), with 0 \texttt{FAIL\_SAT} and 0 \texttt{LIFTER\_BUG}.
 \end{itemize}
 
@@ -155,9 +173,10 @@ $H$ (GPT-6.2-Sol) & \emph{Exploratory} stratified cross-family ($N=40$) & \textb
 
 Table~\ref{tab:vhard} and Figure~\ref{fig:vhard} evaluate \textbf{ground-truth equivalence certification ($F_B \equiv g$)} on the 40 \texttt{IMUL} slices. While uncertified Bitwuzla closes 40/40, raw Z3 bit-blasting + CaDiCaL LRAT times out on 100\% (40/40). \textbf{Lean 4 \texttt{bv\_decide}} raises certified proofs from \textbf{0/40 to 32/40 (80.0\%)}.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \footnotesize
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}lrrrrr@{}}
 \toprule
 \textbf{Family ($n=20$ each)} & \textbf{Z3 \texttt{QF\_BV}} & \textbf{CaDiCaL LRAT} & \textbf{Bitwuzla (\emph{uncert.})} & \textbf{Lean 4 \texttt{bv\_decide}} & \textbf{Mean Lean 4 (incl.\ TO)} \\
@@ -167,12 +186,13 @@ Table~\ref{tab:vhard} and Figure~\ref{fig:vhard} evaluate \textbf{ground-truth e
 \midrule
 \textbf{Total $V_{\mathrm{hard}}$} & \textbf{0 / 40 (0\%)} & \textbf{0 / 40 (0\%)} & \textbf{40 / 40 (100\%)} & \textbf{32 / 40 (80\%)} & \textbf{11.57\,s} \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \caption{Ground-truth equivalence certification ($F_B \equiv g$) on $V_{\mathrm{hard}}$ ($N=40$ \texttt{IMUL} slices).}
 \label{tab:vhard}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.78\textwidth]{fig2_vhard_lean4.pdf}
 \caption{Certified proofs on $V_{\mathrm{hard}}$: Lean 4 \texttt{bv\_decide} (80\%) vs.\ raw Z3 bit-blast + CaDiCaL LRAT (0\%).}
@@ -183,9 +203,10 @@ Table~\ref{tab:vhard} and Figure~\ref{fig:vhard} evaluate \textbf{ground-truth e
 
 Table~\ref{tab:vreal} and Figure~\ref{fig:vreal} evaluate 22 real C functions compiled with \texttt{gcc -O2} and \texttt{clang -O2} that strictly pass the 17-mnemonic allowlist (no widening). Although $A$/$C$ used LRAT while $H$ used Lean~4 \texttt{bv\_decide}, in practice $A$ and $C$ failed at the search/pre-filter stage with 0 SMT passes.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \footnotesize
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}llrrrl@{}}
 \toprule
 \textbf{Config} & \textbf{Oracle} & \textbf{PASS / 22} & \textbf{Rate (\%)} & \textbf{Mean (s)} & \textbf{McNemar vs.\ $A \cup C$} \\
@@ -193,25 +214,35 @@ Table~\ref{tab:vreal} and Figure~\ref{fig:vreal} evaluate 22 real C functions co
 $A$ (SiMBA + Enum) & LRAT & 0 / 22 & 0.00 & 2.28 & --- \\
 $C$ (MCMC-CEGIS) & LRAT & 0 / 22 & 0.00 & 60.02* & --- \\
 \texttt{H-sol} (\texttt{gpt-6.2-sol}) & Lean 4 \texttt{bv\_decide} & 6 / 22 & 27.27 & 55.12 & $p = 0.0313$ (\emph{n.s.\ at $\alpha=0.01$}) \\
-\textbf{\texttt{H-hydrogen}} (\texttt{gemini-4-hydrogen-medium}) & \textbf{Lean 4 \texttt{bv\_decide}} & \textbf{22 / 22} & \textbf{100.00} & \textbf{23.44} & \textbf{$p = 4.77 \times 10^{-7}$} \\
+\textbf{\texttt{H-hydrogen}} (\texttt{gemini-4-hydrogen}) & \textbf{Lean 4 \texttt{bv\_decide}} & \textbf{22 / 22} & \textbf{100.00} & \textbf{23.44} & \textbf{$p = 4.77 \times 10^{-7}$} \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \caption{Benchmark 3 ($V_{\mathrm{real}}$, $N=22$ real \texttt{gcc/clang -O2} compiled C functions). *60.02\,s reflects 0.02\,s loop-exit overhead past the 60\,s cap.}
 \label{tab:vreal}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{fig3_real_o2_and_tradeoff.pdf}
 \caption{Left: Lean 4 \texttt{bv\_decide} certified pass rates on real \texttt{gcc/clang -O2} C binaries ($V_{\mathrm{real}}$, $N=22$). Right: accuracy vs.\ mean wall-clock latency on $V_{\mathrm{test}}$ ($N=160$).}
 \label{fig:vreal}
 \end{figure}
 
-\section{Threats to Validity and Conclusion}
+\section{Threats to Validity, Availability, and Conclusion}
 
-Our study intentionally restricts slices to $\le 24$ straight-line, register-only instructions without memory aliasing or unbounded loops. While Lean~4 \texttt{bv\_decide} verifies bit-blasting and checks LRAT proofs inside Lean, Lean's runtime (\texttt{Lean.ofReduceBool}), \texttt{oracle\_lean.py}, and our lifter (empirically verified on 82,944 three-way checks) remain in the TCB. Finally, Benchmark~1 uses synthetic disjoint families ($N=160$) and Benchmark~3 evaluates $N=22$ real \texttt{-O2} C functions; integrating external commercial/academic obfuscators (Tigress, OLLVM) and open-weight local models is planned for v2.
+\paragraph{Threats to Validity.}
+Our study intentionally restricts slices to $\le 24$ straight-line, register-only instructions without memory aliasing or unbounded loops. While Lean~4 \texttt{bv\_decide} verifies bit-blasting and checks LRAT proofs inside Lean, Lean's native evaluation axiom (\texttt{<thm>.\_native.bv\_decide.ax\_*}), \texttt{oracle\_lean.py}, and our lifter (empirically verified on 82,944 three-way checks) remain in the TCB. In addition, $V_{\mathrm{real}}$ ($N=22$) draws on well-known hash and ARX primitives compiled with \texttt{gcc/clang -O2} that frontier LLMs may have encountered during pretraining; $V_{\mathrm{real}}$ therefore evaluates certified recovery across real optimizing-compiler lowerings rather than unseen algorithm discovery. Finally, integrating external commercial/academic obfuscators (Tigress, OLLVM) and open-weight local models with explicit tool-free API calls is planned for v2.
 
-Within straight-line x86-64 MBA deobfuscation, CRISOL-MBA\textperiodcentered x64 confirms our pre-registered hypothesis $H_1$ ($+65.0$\,pp, $p = 9.86 \times 10^{-32}$), reaches 160/160 (95\% CI $[97.7\%, 100\%]$) with exploratory Hybrid~$H$, certifies 22/22 (95\% CI $[84.6\%, 100\%]$) real \texttt{gcc/clang -O2} C functions, and raises certified \texttt{IMUL} ground-truth proofs from 0\% to 80\% via Lean~4 \texttt{bv\_decide} with 0 false positives.
+\paragraph{Code and Data Availability.}
+All source code, frozen datasets, raw benchmark JSONL logs, independent re-verification logs, and an offline Artifact Evaluation script (\texttt{python3 replay\_offline.py} \texttt{--mode smoke}, requiring zero API keys) are publicly archived under the MIT License at:
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Zenodo Archive (DOI):} \url{https://doi.org/10.5281/zenodo.24476603}
+  \item \textbf{GitHub Repository (tag \texttt{v1.0.0}):} \url{https://github.com/crisolabs/research-lab/tree/v1.0.0/experimentos/04-crisol-mba-x64}
+\end{itemize}
+
+\paragraph{Conclusion.}
+Within straight-line x86-64 MBA deobfuscation, CRISOL-MBA-x64 confirms our pre-registered hypothesis $H_1$ ($+65.0$\,pp, $p = 9.86 \times 10^{-32}$), reaches 160/160 (95\% CI $[97.7\%, 100\%]$) with exploratory Hybrid~$H$, certifies 22/22 (95\% CI $[84.6\%, 100\%]$) real \texttt{gcc/clang -O2} C functions, and raises certified \texttt{IMUL} ground-truth proofs from 0\% to 80\% via Lean~4 \texttt{bv\_decide} with 0 false positives relative to the declared TCB.
 
 \bibliographystyle{plain}
 \bibliography{references}
