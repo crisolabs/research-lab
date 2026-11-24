@@ -28,7 +28,7 @@ python3 -m venv .venv
 
 ## 2. Deterministic Paper & Checksum Verification (Python Stdlib + Git; Zero External Solvers)
 
-Verify every cell of Tables 2–4, strict wall-clock cutoffs, subset counts, all 20 document $p$-values (17 McNemar + 3 family sign-test values), and all three SHA-256 manifests (`data/manifest_V.sha256`, `data/manifest_V_real.sha256`, `docs/SHA256SUMS.txt`) directly against raw `.jsonl`/`.csv` logs.
+Verify every cell of Tables 2–4, strict wall-clock cutoffs, subset counts, all 20 document $p$-values (17 McNemar + 3 family sign-test values), all 58 fractions and 67 percentages across `main.tex`, cross-consistency across all raw `.jsonl`/`.csv` logs and `data/summary_gamba_vtest.json`, byte-for-byte `arxiv-crisol-mba-x64-v1.tar.gz` integrity, and all three SHA-256 manifests (`data/manifest_V.sha256`, `data/manifest_V_real.sha256`, `docs/SHA256SUMS.txt`).
 
 By default, `verify_paper_claims.py` also invokes `git cat-file -e` to verify that commit `42c3d22` cited in `main.tex` exists in repository history (run inside a full Git clone of `crisolabs/research-lab`, not `--depth 1`; if running from an extracted Zenodo `.zip` snapshot without `.git` history, pass `--allow-no-git`):
 
@@ -42,7 +42,7 @@ python3 verify_paper_claims.py --allow-no-git
 
 ## 3. Test Suite, Offline Certificate Replay & Figure Regeneration (Zero LLM API Keys)
 
-Using the Python `.venv` and `build/` verifiers from Section 1, run the 38-test suite (lifter, Unicorn/CPU 3-way checks, `0x67` `LEA` wrapping, LRAT, and Lean 4 `bv_decide`) and re-verify cached `Hybrid H` outputs (`--mode smoke`: 12 slices in ~30 s; `--mode full`: all 228 archived `H` passes — 182 `H`-Hydrogen + 46 `H`-Sol — across `V_test` and `V_real`, checking canonical cost, LRAT with 60 s per-stage solver caps, and Lean 4 `bv_decide` with 60 s theorem caps across 2 worker processes by default) while regenerating `paper/fig1..fig3`:
+Using the Python `.venv` and `build/` verifiers from Section 1, run the 38-test suite (lifter, Unicorn/CPU 3-way checks, `0x67` `LEA` wrapping, LRAT, and Lean 4 `bv_decide`) and re-verify cached `Hybrid H` outputs (`--mode smoke`: 12 slices in ~30 s; `--mode full`: all 228 archived `H` passes — 182 `H`-Hydrogen + 46 `H`-Sol — across `V_test` and `V_real`, checking canonical cost, LRAT with 60 s Z3/Bitwuzla/CaDiCaL solver caps [in-process Z3 `goal.dimacs()` bit-blasting runs uncapped], and Lean 4 `bv_decide` with 60 s theorem caps across 2 worker processes by default) while regenerating `paper/fig1..fig3`:
 
 ```bash
 .venv/bin/pytest -q

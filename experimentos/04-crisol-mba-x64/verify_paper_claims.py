@@ -160,15 +160,61 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
     )
 
     mv = json.loads((REPO / "data" / "manifest_V.json").read_text(encoding="utf-8"))
+    mvr = json.loads((REPO / "data" / "manifest_V_real.json").read_text(encoding="utf-8"))
+    mraw = json.loads((REPO / "data" / "manifest_raw.json").read_text(encoding="utf-8"))
+    sgamba = json.loads((REPO / "data" / "summary_gamba_vtest.json").read_text(encoding="utf-8"))
+    vdev = mv["V_dev"]
     vtest = mv["V_test"]
+    if len(vdev) != 40 or len(vtest) != 160 or len(mvr["instances"]) != 22 or len(mraw["instances"]) != 240:
+        fail("Dataset manifest instance counts mismatch (expected V_dev=40, V_test=160, V_real=22, raw=240)")
     fam_by_id = {d["instance_id"]: d["family"] for d in vtest}
-    gamba_ids = {d["instance_id"] for d in vtest if d["family"] in ("test_mba_3var_linear_64", "test_mba_nand_nor_add_64")}
+    gamba_fams = {
+        fam for fam, info in sgamba["by_family"].items()
+        if info["supported"] == 20 and info["gamba_simplified"] == 20 and info["n"] == 20
+    }
+    unsupported_fams = {
+        fam for fam, info in sgamba["by_family"].items()
+        if info["supported"] == 0 and info["gamba_simplified"] == 0 and info["n"] == 20
+    }
+    if len(gamba_fams) != 2 or len(unsupported_fams) != 6 or sgamba["gamba_simplified_slices"] != 40 or sgamba["n_v_test"] != 160:
+        fail("summary_gamba_vtest.json inconsistent with 40/160 across 2 supported families")
+    gamba_ids = {d["instance_id"] for d in vtest if d["family"] in gamba_fams}
     le10_ids = {d["instance_id"] for d in vtest if d["gt_cert_sec"] <= 10.0}
     n120_ids = {d["instance_id"] for d in vtest if d["family"] not in ("test_mba_nand_nor_add_64", "test_mba_sar_neg_32")}
 
     rows_t = [json.loads(l) for l in (REPO / "data" / "results_test.jsonl").open() if l.strip()]
+    rows_t_csv = list(csv.DictReader((REPO / "data" / "results_test.csv").open()))
+    rows_p = [json.loads(l) for l in (REPO / "data" / "results_pilot_dev.jsonl").open() if l.strip()]
+    rows_p_csv = list(csv.DictReader((REPO / "data" / "results_pilot_dev.csv").open()))
     rows_h = [json.loads(l) for l in (REPO / "data" / "results_test_H_hydrogen.jsonl").open() if l.strip()]
     rows_hs = [json.loads(l) for l in (REPO / "data" / "results_test_H_sol40.jsonl").open() if l.strip()]
+
+    # Cross-check CSV vs JSONL row-by-row (keyed by unique (config, instance_id)) for both results_test and results_pilot_dev!
+    for label_pair, js_rows, csv_rows, exp_len in [
+        ("results_test", rows_t, rows_t_csv, 640),
+        ("results_pilot_dev", rows_p, rows_p_csv, 80),
+    ]:
+        if len(js_rows) != exp_len or len(csv_rows) != exp_len:
+            fail(f"{label_pair} row count mismatch: jsonl={len(js_rows)}, csv={len(csv_rows)}, expected={exp_len}")
+        js_by_key = {(r["config"], r["instance_id"]): r for r in js_rows}
+        csv_by_key = {(r["config"], r["instance_id"]): r for r in csv_rows}
+        if len(js_by_key) != exp_len or set(js_by_key.keys()) != set(csv_by_key.keys()):
+            fail(f"{label_pair} unique key mismatch between .jsonl and .csv")
+        for k, jr in js_by_key.items():
+            cr = csv_by_key[k]
+            if (
+                jr["family"] != cr["family"]
+                or str(jr["passed"]) != cr["passed"]
+                or jr["status"] != cr["status"]
+                or f"{jr['elapsed_sec']:.9f}" != f"{float(cr['elapsed_sec']):.9f}"
+                or int(jr["smt_calls"]) != int(cr["smt_calls"])
+                or int(jr["llm_calls"]) != int(cr["llm_calls"])
+                or int(jr["candidates_tried"]) != int(cr["candidates_tried"])
+                or (jr.get("best_expr") or "") != (cr.get("best_expr") or "")
+                or (jr.get("lrat_sha256") or "") != (cr.get("lrat_sha256") or "")
+            ):
+                fail(f"Row mismatch between {label_pair}.jsonl and .csv on {k}")
+    checks += 4
 
     # Verify 362 Phase-1 PASS LRAT SHA-256 digests and 0 final LIFTER_BUG verdicts
     p1_passes = [r for r in rows_t if r["passed"]]
@@ -420,9 +466,46 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
             _assert_clean_numeric_context(sec_txt, m.start(), m.end(), f"{sec_name} percentage `{m.group(0)}`")
         checks += 2
 
-    # 5c. Masked LaTeX prose-skeleton SHA-256 + arXiv tarball byte-for-byte integrity!
-    # Once all data-derived numbers/p-values/fractions/percentages are verified above, lock the
-    # surrounding prose/math skeleton so NO operator/word/sign injection anywhere in main.tex passes.
+    # 5c. Full-document 58-fraction + 67-percentage exact verification (covering Section 4 subsets too!)
+    d_120 = len(strict_sets["D"] & n120_ids)
+    ac_120 = len(ac_strict & n120_ids)
+    h_120 = len(strict_sets["H"] & n120_ids)
+    h_120_inf = len(inflight_sets["H"] & n120_ids)
+    exp_doc_fracs = (
+        exp_abs_fracs
+        + [
+            f"{len(le10_ids)}/160", "20/20",
+            f"{d_129}/{len(le10_ids)}", f"{ac_129}/{len(le10_ids)}", "20/20",
+            f"{d_120}/{len(n120_ids)}", f"{ac_120}/{len(n120_ids)}", f"{h_120}/{len(n120_ids)}", f"{h_120_inf}/{len(n120_ids)}",
+            f"{len(strict_sets['D'])}/160", f"{len(inflight_sets['D'])}/160", f"{len(strict_sets['B'])}/160",
+            f"{len(strict_sets['H'])}/160", f"{len(inflight_sets['H'])}/160",
+            "40/40", "6/8", "32/40", "35/40", "40/40", "0/40", "2/40", "3/40", "35/40",
+            "3/20", "0/20", "3/40", "2/40", "35/40",
+        ]
+        + exp_conc_fracs
+    )
+    exp_doc_pcts = (
+        exp_abs_pcts
+        + [
+            f"{100.0 * d_129 / len(le10_ids):.2f}%", f"{100.0 * ac_129 / len(le10_ids):.2f}%",
+            f"{100.0 * d_120 / len(n120_ids):.2f}%", f"{100.0 * ac_120 / len(n120_ids):.2f}%", f"{100.0 * h_120 / len(n120_ids):.2f}%",
+            f"{100.0 * len(strict_sets['H']) / 160:.2f}%", "95%", "96.6%", "100%",
+            f"{100.0 * len(inflight_sets['H']) / 160:.1f}%", "95%", "97.7%", "100%",
+            "100%", "5.0%", "7.5%", "87.5%",
+            "0%", "10%", "100%", "100%", "0%", "0%", "100%", "75%", "0%", "5.0%", "100%", "87.5%",
+            "5.0%", "87.5%",
+        ]
+        + exp_conc_pcts
+    )
+    got_doc_fracs = re.findall(r"\b\d+/\d+\b", tex)
+    got_doc_pcts = [m.replace(r"\%", "%") for m in re.findall(r"\d+(?:\.\d+)?\\%", tex)]
+    if got_doc_fracs != exp_doc_fracs:
+        fail(f"Full-document fraction sequence mismatch ({len(got_doc_fracs)} vs {len(exp_doc_fracs)}): got {got_doc_fracs}")
+    if got_doc_pcts != exp_doc_pcts:
+        fail(f"Full-document percentage sequence mismatch ({len(got_doc_pcts)} vs {len(exp_doc_pcts)}): got {got_doc_pcts}")
+    checks += 2
+
+    # 5d. Masked LaTeX prose-skeleton SHA-256 + strict arXiv tarball byte-for-byte integrity (no symlinks/extras)!
     skel = re.sub(r"\bp\s*=\s*(?:\d+\.\d+\s*\\times\s*10\^\{-?\d+\}|\d+\.\d+)", "p=<PVAL>", tex)
     skel = re.sub(r"\b\d+/\d+\b", "<FRAC>", skel)
     skel = re.sub(r"\d+(?:\.\d+)?\\%", "<PCT>", skel)
@@ -434,8 +517,16 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
     if not tar_path.is_file():
         fail(f"Missing arXiv tarball: {tar_path}")
     with tarfile.open(tar_path, "r:gz") as tf:
-        tar_members = {m.name: tf.extractfile(m).read() for m in tf.getmembers() if m.isfile()}
-    dir_files = {p.name: p.read_bytes() for p in arxiv_dir.iterdir() if p.is_file()}
+        members = tf.getmembers()
+        if any(not m.isfile() or m.issym() or m.islnk() for m in members):
+            fail(f"arXiv tarball `{tar_path.name}` contains non-regular file or symlink entry!")
+        tar_names = [m.name for m in members]
+        if len(tar_names) != len(set(tar_names)):
+            fail(f"arXiv tarball `{tar_path.name}` contains duplicate member names!")
+        tar_members = {m.name: tf.extractfile(m).read() for m in members}
+    dir_files = {p.name: p.read_bytes() for p in arxiv_dir.iterdir() if p.is_file() and not p.is_symlink()}
+    if any(p.is_symlink() or not p.is_file() for p in arxiv_dir.iterdir()):
+        fail("paper/arxiv-v1/ contains unexpected symlink or subdirectory!")
     if tar_members != dir_files:
         fail(f"arXiv tarball `{tar_path.name}` differs from `paper/arxiv-v1/` files!")
     checks += 2
