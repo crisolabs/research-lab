@@ -153,10 +153,15 @@ def check_tex_text(tex: str) -> int:
                 fail(f"tab:vhard `{prefix}` {cname} exact mismatch: got `{got}` vs `{exp}`")
         checks += 5
 
-    # 4. Table tab:vreal exact equality
+    # 4. Table tab:vreal exact equality (including McNemar p-value column!)
     vr_rows = [json.loads(l) for l in (REPO / "data" / "results_real_o2.jsonl").open() if l.strip()]
     tab_vreal = tex.split(r"\label{tab:vreal}")[0].split(r"\begin{table}")[-1]
-    for prefix, cfg_name, star in [("$A$", "A", ""), ("$C$", "C", "*"), (r"\texttt{H-sol}", "H_sol", ""), (r"\textbf{\texttt{H-hydrogen}}", "H_hydrogen", "")]:
+    for prefix, cfg_name, star, exp_pcol in [
+        ("$A$", "A", "", "---"),
+        ("$C$", "C", "*", "---"),
+        (r"\texttt{H-sol}", "H_sol", "", r"$p = 0.0313$ (n.s.\ at $\alpha=0.01$)"),
+        (r"\textbf{\texttt{H-hydrogen}}", "H_hydrogen", "", r"$p = 4.77 \times 10^{-7}$"),
+    ]:
         matched = [ln for ln in tab_vreal.splitlines() if ln.strip().startswith(prefix)]
         if len(matched) != 1:
             fail(f"Could not locate `{prefix}` in tab:vreal")
@@ -165,9 +170,9 @@ def check_tex_text(tex: str) -> int:
         exp_p = sum(1 for r in sub if r["passed"] and r["elapsed_sec"] <= 60.0)
         exp_pct = f"{100.0 * exp_p / 22:.2f}"
         exp_mean = f"{sum(r['elapsed_sec'] for r in sub)/len(sub):.2f}{star}"
-        if cols[2] != f"{exp_p} / 22" or cols[3] != exp_pct or cols[4] != exp_mean:
-            fail(f"tab:vreal `{prefix}` mismatch: got {cols[2:5]} vs ({exp_p} / 22, {exp_pct}, {exp_mean})")
-        checks += 3
+        if cols[2] != f"{exp_p} / 22" or cols[3] != exp_pct or cols[4] != exp_mean or cols[5] != exp_pcol:
+            fail(f"tab:vreal `{prefix}` mismatch: got {cols[2:6]} vs ({exp_p} / 22, {exp_pct}, {exp_mean}, {exp_pcol})")
+        checks += 4
 
     # 5. Bibliography, README (228 passes), & no stale files in REPO / paper
     bib = BIB_PATH.read_text(encoding="utf-8")
@@ -182,17 +187,37 @@ def check_tex_text(tex: str) -> int:
             fail(f"Stale duplicate file `{stale}` exists in `{REPO / 'paper'}`!")
     checks += 6
 
-    # 5b. Prose consistency in Abstract & Conclusion (catch mutations outside tables too!)
+    # 5b. Exact token-list consistency in Abstract & Conclusion (catches ANY digit mutation in fractions/percentages!)
     abstract = tex.split(r"\begin{abstract}")[1].split(r"\end{abstract}")[0]
     conclusion = tex.split(r"\paragraph{Conclusion.}")[1].split(r"\bibliographystyle")[0]
-    for sec_name, sec_txt, reqs in [
-        ("Abstract", abstract, ["24.38\\%: 39/160", "90.62\\%: 145/160", "99.38\\%: 159/160", "2/40 (5.0\\%)", "87.5\\% (35/40", "22/22 (100.0\\%"]),
-        ("Conclusion", conclusion, ["159/160 (99.38\\%", "22/22", "5.0\\% (2/40", "87.5\\% (35/40)"]),
-    ]:
-        for tok in reqs:
-            if tok not in sec_txt:
-                fail(f"{sec_name} missing exact verified prose token `{tok}`!")
-            checks += 1
+    exp_abs_fracs = [
+        "39/160", "42/160", "40/40", "40/160", "145/160", "146/160", "121/129", "32/129",
+        "154/160", "159/160", "160/160", "119/120", "19/120", "40/40",
+        "40/40", "0/40", "2/40", "3/40", "35/40", "20/20", "15/20",
+        "0/22", "22/22", "6/22",
+    ]
+    exp_abs_pcts = [
+        "24.38%", "26.25%", "100%", "25.00%", "90.62%", "91.25%", "96.25%",
+        "99.38%", "95%", "96.6%", "100%", "100.0%", "99.17%", "15.83%", "100.0%",
+        "0.0%", "5.0%", "7.5%", "87.5%", "100%", "75%",
+        "0.0%", "100.0%", "95%", "84.6%", "100%", "27.27%",
+    ]
+    got_abs_fracs = re.findall(r"\b\d+/\d+\b", abstract)
+    got_abs_pcts = [m.replace(r"\%", "%") for m in re.findall(r"\d+(?:\.\d+)?\\%", abstract)]
+    if got_abs_fracs != exp_abs_fracs:
+        fail(f"Abstract fraction sequence mismatch: got {got_abs_fracs} vs {exp_abs_fracs}")
+    if got_abs_pcts != exp_abs_pcts:
+        fail(f"Abstract percentage sequence mismatch: got {got_abs_pcts} vs {exp_abs_pcts}")
+
+    exp_conc_fracs = ["159/160", "160/160", "22/22", "2/40", "3/40", "35/40"]
+    exp_conc_pcts = ["99.38%", "95%", "96.6%", "100%", "95%", "84.6%", "100%", "5.0%", "87.5%"]
+    got_conc_fracs = re.findall(r"\b\d+/\d+\b", conclusion)
+    got_conc_pcts = [m.replace(r"\%", "%") for m in re.findall(r"\d+(?:\.\d+)?\\%", conclusion)]
+    if got_conc_fracs != exp_conc_fracs:
+        fail(f"Conclusion fraction sequence mismatch: got {got_conc_fracs} vs {exp_conc_fracs}")
+    if got_conc_pcts != exp_conc_pcts:
+        fail(f"Conclusion percentage sequence mismatch: got {got_conc_pcts} vs {exp_conc_pcts}")
+    checks += 4
 
     # 6. Portable git commit SHA verification
     git_root = _resolve_git_root()
