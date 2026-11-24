@@ -182,6 +182,18 @@ def check_tex_text(tex: str) -> int:
             fail(f"Stale duplicate file `{stale}` exists in `{REPO / 'paper'}`!")
     checks += 6
 
+    # 5b. Prose consistency in Abstract & Conclusion (catch mutations outside tables too!)
+    abstract = tex.split(r"\begin{abstract}")[1].split(r"\end{abstract}")[0]
+    conclusion = tex.split(r"\paragraph{Conclusion.}")[1].split(r"\bibliographystyle")[0]
+    for sec_name, sec_txt, reqs in [
+        ("Abstract", abstract, ["24.38\\%: 39/160", "90.62\\%: 145/160", "99.38\\%: 159/160", "2/40 (5.0\\%)", "87.5\\% (35/40", "22/22 (100.0\\%"]),
+        ("Conclusion", conclusion, ["159/160 (99.38\\%", "22/22", "5.0\\% (2/40", "87.5\\% (35/40)"]),
+    ]:
+        for tok in reqs:
+            if tok not in sec_txt:
+                fail(f"{sec_name} missing exact verified prose token `{tok}`!")
+            checks += 1
+
     # 6. Portable git commit SHA verification
     git_root = _resolve_git_root()
     shas = re.findall(r"commit\s+\\texttt\{([0-9a-f]{7,40})\}", tex)
