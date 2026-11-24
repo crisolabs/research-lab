@@ -33,9 +33,10 @@ def fail(msg: str) -> None:
 
 
 def strip_tex(s: str) -> str:
-    s = re.sub(r"\\textbf\{([^}]*)\}", r"\1", s)
-    s = re.sub(r"\\texttt\{([^}]*)\}", r"\1", s)
-    s = re.sub(r"\\emph\{([^}]*)\}", r"\1", s)
+    prev = None
+    while prev != s:
+        prev = s
+        s = re.sub(r"\\(?:textbf|texttt|emph)\{([^{}]*)\}", r"\1", s)
     return s.replace("\\\\", "").replace(r"\,", " ").replace(r"\%", "%").strip()
 
 
@@ -160,7 +161,7 @@ def check_tex_text(tex: str) -> int:
         ("$A$", "A", "", "---"),
         ("$C$", "C", "*", "---"),
         (r"\texttt{H-sol}", "H_sol", "", r"$p = 0.0313$ (n.s.\ at $\alpha=0.01$)"),
-        (r"\textbf{\texttt{H-hydrogen}}", "H_hydrogen", "", r"$p = 4.77 \times 10^{-7}$"),
+        (r"\textbf{\texttt{H-hydrogen}}", "H_hydrogen", "", r"\textbf{$p = 4.77 \times 10^{-7}$}"),
     ]:
         matched = [ln for ln in tab_vreal.splitlines() if ln.strip().startswith(prefix)]
         if len(matched) != 1:
