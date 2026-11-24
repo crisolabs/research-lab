@@ -45,8 +45,8 @@ _ALLOWED_RIGHT_CONTEXT_RE = re.compile(
 _ALLOWED_PVAL_LEFT_RE = re.compile(
     r"(?:[,;(] |(?:McNemar|test|sided) \$| & \$| & \\textbf\{\$|[;,] \$)$"
 )
-CANONICAL_PROSE_SKELETON_SHA256 = "1cb34732e47ee23e1cfed54187b744d1c42f305ac6a22dbdebce7ccc4108d2e8"
-CANONICAL_MAIN_TEX_SHA256 = "562e2eda9083051dc3f4c83ae5aede3ac7d63925d625da6219f402ec50dd52dd"
+CANONICAL_PROSE_SKELETON_SHA256 = "9162538becd11fca5fc8d421c6d82a882ae669541ee8b56233c6bd434cb37c99"
+CANONICAL_MAIN_TEX_SHA256 = "72a918715abc3de8e9074bb36aaa451825b010133b301c840620658a782c21ac"
 _ALLOWED_PVAL_RIGHT_RE = re.compile(
     r"^(?:"
     r"; |, |\)(?:[ ,;.\n}]|$)|"
@@ -184,21 +184,23 @@ def check_tex_text(tex: str, *, allow_no_git: bool = False) -> int:
     n120_ids = {d["instance_id"] for d in vtest if d["family"] not in ("test_mba_nand_nor_add_64", "test_mba_sar_neg_32")}
 
     rows_t = [json.loads(l) for l in (REPO / "data" / "results_test.jsonl").open() if l.strip()]
+    rows_t_raw = [json.loads(l, parse_float=str, parse_int=str) for l in (REPO / "data" / "results_test.jsonl").open() if l.strip()]
     rows_t_csv = list(csv.DictReader((REPO / "data" / "results_test.csv").open()))
     rows_p = [json.loads(l) for l in (REPO / "data" / "results_pilot_dev.jsonl").open() if l.strip()]
+    rows_p_raw = [json.loads(l, parse_float=str, parse_int=str) for l in (REPO / "data" / "results_pilot_dev.jsonl").open() if l.strip()]
     rows_p_csv = list(csv.DictReader((REPO / "data" / "results_pilot_dev.csv").open()))
     rows_h = [json.loads(l) for l in (REPO / "data" / "results_test_H_hydrogen.jsonl").open() if l.strip()]
     rows_hs = [json.loads(l) for l in (REPO / "data" / "results_test_H_sol40.jsonl").open() if l.strip()]
 
-    # Cross-check ALL 14 columns as exact strings between CSV and JSONL (keyed by unique (config, instance_id))!
+    # Cross-check ALL 14 columns as exact decimal/text strings (`parse_float=str, parse_int=str`) between CSV and JSONL!
     expected_csv_cols = [
         "config", "instance_id", "family", "passed", "status", "elapsed_sec",
         "smt_calls", "llm_calls", "candidates_tried", "best_expr", "best_cost",
         "ground_truth_cost", "lrat_sha256", "detail",
     ]
     for label_pair, js_rows, csv_rows, exp_len in [
-        ("results_test", rows_t, rows_t_csv, 640),
-        ("results_pilot_dev", rows_p, rows_p_csv, 80),
+        ("results_test", rows_t_raw, rows_t_csv, 640),
+        ("results_pilot_dev", rows_p_raw, rows_p_csv, 80),
     ]:
         if len(js_rows) != exp_len or len(csv_rows) != exp_len:
             fail(f"{label_pair} row count mismatch: jsonl={len(js_rows)}, csv={len(csv_rows)}, expected={exp_len}")
